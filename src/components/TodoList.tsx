@@ -6,6 +6,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea
 import { GripVertical, Trash2, Edit2, Check, Plus, Undo2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Progress } from "@/components/ui/progress";
 import './TodoList.css';
 
 interface Todo {
@@ -18,39 +19,47 @@ interface Todo {
 const CompletedPanel: React.FC<{
   completedTodos: Todo[];
   onRestore: (id: number) => void;
-}> = ({ completedTodos, onRestore }) => (
-  <Card className="w-full lg:max-w-md">
-    <CardHeader>
-      <CardTitle>What I've done</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <Droppable droppableId="completed">
-        {(provided) => (
-          <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
-            {completedTodos.map((todo, index) => (
-              <Draggable key={todo.id} draggableId={todo.id.toString()} index={index}>
-                {(provided) => (
-                  <li
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    className="flex items-center justify-between p-2 pl-4 rounded-md border bg-card text-card-foreground shadow-sm"
-                  >
-                    <span className="text-sm line-through truncate mr-2">{todo.text}</span>
-                    <Button variant="ghost" size="icon" onClick={() => onRestore(todo.id)}>
-                      <Undo2 size={16} />
-                    </Button>
-                  </li>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </ul>
-        )}
-      </Droppable>
-    </CardContent>
-  </Card>
-);
+}> = ({ completedTodos, onRestore }) => {
+  const progressValue = Math.min(completedTodos.length, 10) * 10;
+
+  return (
+    <Card className="w-full lg:max-w-md">
+      <CardHeader>
+        <CardTitle className="mb-4">What I've done today</CardTitle>
+        <Progress value={progressValue} className="w-full h-2 mt-2" />
+        <p className="text-sm text-muted-foreground pt-2">
+          {Math.min(completedTodos.length, 10)} / 10 tasks completed
+        </p>
+      </CardHeader>
+      <CardContent>
+        <Droppable droppableId="completed">
+          {(provided) => (
+            <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
+              {completedTodos.map((todo, index) => (
+                <Draggable key={todo.id} draggableId={todo.id.toString()} index={index}>
+                  {(provided) => (
+                    <li
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className="flex items-center justify-between p-2 pl-4 rounded-md border bg-card text-card-foreground shadow-sm"
+                    >
+                      <span className="text-sm line-through truncate mr-2">{todo.text}</span>
+                      <Button variant="ghost" size="icon" onClick={() => onRestore(todo.id)}>
+                        <Undo2 size={16} />
+                      </Button>
+                    </li>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </ul>
+          )}
+        </Droppable>
+      </CardContent>
+    </Card>
+  );
+};
 
 export function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
