@@ -1,7 +1,7 @@
 {
   "appTitle": "Simple Daily Todo",
   "addTodo": "新增",
-  "addTodoPlaceholder": "新增新任務",
+  "addTodoPlaceholder": "輸入今天的任務",
   "whatIveDoneToday": "今天已完成的事項",
   "tasksCompleted": "已完成 {{count}} / 10 個任務",
   "dragToReorder": "拖動來重新排序",

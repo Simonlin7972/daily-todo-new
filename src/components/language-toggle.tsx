@@ -20,9 +20,13 @@ export function LanguageToggle() {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="ghost" size="icon" onClick={toggleLanguage} className="w-10 h-10">
-            <Globe className="h-[1.5rem] w-[1.5rem]" />
-            <span className="sr-only">Toggle language</span>
+          <Button 
+            variant="outline" 
+            onClick={toggleLanguage} 
+            className="w-auto h-10 px-3 flex items-center space-x-2"
+          >
+            <Globe className="h-[1rem] w-[1rem]" />
+            <span>{i18n.language === 'en' ? 'EN' : '繁中'}</span>
           </Button>
         </TooltipTrigger>
         <TooltipContent>

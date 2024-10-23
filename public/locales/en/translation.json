@@ -1,7 +1,7 @@
 {
   "appTitle": "Simple Daily Todo",
   "addTodo": "Add",
-  "addTodoPlaceholder": "Add any new task",
+  "addTodoPlaceholder": "Enter any new task",
   "whatIveDoneToday": "What I've done today",
   "tasksCompleted": "{{count}} / 10 tasks completed",
   "dragToReorder": "Drag to reorder",

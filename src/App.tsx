@@ -22,7 +22,7 @@ export const App: React.FC = () => {
                 <span className="font-['Pacifico'] text-2xl font-bold text-primary whitespace-nowrap">{t('appTitle')}</span>
               </a>
             </div>
-            <div className="flex-shrink-0 w-24 flex justify-end items-center space-x-1">
+            <div className="flex-shrink-0 flex justify-end items-center space-x-2">
               <LanguageToggle />
               <ModeToggle />
             </div>
