@@ -16,5 +16,7 @@
   "themeDark": "暗色模式",
   "themeSystem": "根據系統設定",
   "toggleLanguage": "切換語言",
-  "toggleTheme": "切換主題"
+  "toggleTheme": "切換主題",
+  "addSection": "新增分類",
+  "newSection": "新分類"
 }

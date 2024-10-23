@@ -145,11 +145,9 @@ export function TodoList() {
     }
   };
 
-  const addSection = (index: number) => {
-    const newSection: Todo = { id: Date.now(), text: 'New Section', completed: false, type: 'section' };
-    const updatedTodos = [...todos];
-    updatedTodos.splice(index + 1, 0, newSection);
-    setTodos(updatedTodos);
+  const addSection = () => {
+    const newSection: Todo = { id: Date.now(), text: t('newSection'), completed: false, type: 'section' };
+    setTodos([...todos, newSection]);
     startEditing(newSection.id, newSection.text, {} as React.MouseEvent);
   };
 
@@ -283,23 +281,15 @@ export function TodoList() {
                             <li
                               ref={provided.innerRef}
                               {...provided.draggableProps}
-                              {...provided.dragHandleProps}
                               className={`flex items-center group ${snapshot.isDragging ? 'opacity-70' : ''} ${transitioning === todo.id ? 'opacity-70 transition-all duration-300' : ''}`}
                             >
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <span 
-                                    {...provided.dragHandleProps} 
-                                    className="mr-2 cursor-move text-gray-300 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
-                                  >
-                                    <GripVertical size={20} />
-                                  </span>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>{t('dragToReorder')}</p>
-                                </TooltipContent>
-                              </Tooltip>
-                              <div className={`flex items-center justify-between p-2 rounded-lg border bg-card text-card-foreground shadow-sm flex-grow ${todo.type === 'section' ? 'bg-secondary' : ''} ${snapshot.isDragging ? 'rotate-1' : ''} hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-200`}>
+                              <span 
+                                {...provided.dragHandleProps} 
+                                className="mr-2 cursor-move text-gray-300 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200 opacity-0 group-hover:opacity-100"
+                              >
+                                <GripVertical size={20} />
+                              </span>
+                              <div className={`flex items-center justify-between p-2 rounded-lg border bg-card text-card-foreground shadow-sm flex-grow ${todo.type === 'section' ? 'bg-secondary border-secondary h-12' : ''} ${snapshot.isDragging ? 'rotate-1' : ''} hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-200`}>
                                 <div className="flex items-center flex-grow">
                                   {todo.type === 'todo' && (
                                     <Checkbox
@@ -319,7 +309,7 @@ export function TodoList() {
                                     />
                                   ) : (
                                     <span 
-                                      className={`${todo.completed ? 'line-through text-muted-foreground' : ''} text-sm flex-grow text-left ${todo.type === 'section' ? 'font-bold' : ''} cursor-pointer`}
+                                      className={`${todo.completed ? 'line-through text-muted-foreground' : ''} text-sm flex-grow text-left ${todo.type === 'section' ? 'font-bold text-sm pl-2' : ''} cursor-pointer`}
                                       onClick={(e) => startEditing(todo.id, todo.text, e)}
                                     >
                                       {todo.text}
@@ -376,6 +366,13 @@ export function TodoList() {
                   </ul>
                 )}
               </Droppable>
+              <Button 
+                variant="ghost" 
+                className="w-full mt-4 text-muted-foreground hover:text-foreground transition-colors"
+                onClick={addSection}
+              >
+                + {t('addSection')}
+              </Button>
             </CardContent>
           </Card>
           {completedTodos.length > 0 && (

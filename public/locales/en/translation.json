@@ -16,5 +16,7 @@
   "themeDark": "Dark",
   "themeSystem": "System",
   "toggleLanguage": "Switch Language",
-  "toggleTheme": "Switch Theme"
+  "toggleTheme": "Switch Theme",
+  "addSection": "Add Section",
+  "newSection": "New Section"
 }
