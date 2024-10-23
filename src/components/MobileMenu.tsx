@@ -17,11 +17,11 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ currentTime }) => {
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[250px] sm:w-[300px]">
+      <SheetContent side="right" className="w-[300px] sm:w-[300px]">
         <div className="flex flex-col space-y-4 mt-4">
           <span className="text-sm">{currentTime}</span>
-          <LanguageToggle />
-          <ModeToggle />
+          <LanguageToggle isMobile={true} />
+          <ModeToggle isMobile={true} />
         </div>
       </SheetContent>
     </Sheet>

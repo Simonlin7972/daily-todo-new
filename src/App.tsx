@@ -47,7 +47,7 @@ export const App: React.FC = () => {
             </div>
           </div>
         </header>
-        <main className="flex-grow w-full py-6">
+        <main className="flex-grow w-full py-12">
           <TodoList />
         </main>
         <div className="fixed bottom-4 right-4 space-x-2">

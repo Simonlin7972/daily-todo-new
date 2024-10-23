@@ -21,7 +21,8 @@ interface Todo {
 const CompletedPanel: React.FC<{
   completedTodos: Todo[];
   onRestore: (id: number) => void;
-}> = ({ completedTodos, onRestore }) => {
+  isMobile: boolean;
+}> = ({ completedTodos, onRestore, isMobile }) => {
   const { t } = useTranslation();
   const progressValue = Math.min(completedTodos.length, 10) * 10;
   const isCompleted = completedTodos.length >= 10;
@@ -41,7 +42,7 @@ const CompletedPanel: React.FC<{
       <CardContent>
         <Droppable droppableId="completed">
           {(provided) => (
-            <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
+            <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2 pl-4">
               {completedTodos.map((todo, index) => (
                 <Draggable key={todo.id} draggableId={todo.id.toString()} index={index}>
                   {(provided) => (
@@ -55,16 +56,22 @@ const CompletedPanel: React.FC<{
                         <Check size={20} className="text-gray-300 mr-2" />
                         <span className="text-sm line-through truncate">{todo.text}</span>
                       </div>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" onClick={() => onRestore(todo.id)}>
-                            <Undo2 size={16} />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{t('restore')}</p>
-                        </TooltipContent>
-                      </Tooltip>
+                      {isMobile ? (
+                        <Button variant="ghost" size="icon" onClick={() => onRestore(todo.id)}>
+                          <Undo2 size={16} />
+                        </Button>
+                      ) : (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="icon" onClick={() => onRestore(todo.id)}>
+                              <Undo2 size={16} />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{t('restore')}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
                     </li>
                   )}
                 </Draggable>
@@ -90,6 +97,8 @@ export function TodoList() {
   const fullTitle = t('whatDoYouWantToGetDoneToday');
   const [shouldResetTitle, setShouldResetTitle] = useState(false);
   const [transitioning, setTransitioning] = useState<number | null>(null);
+
+  const isMobile = window.innerWidth < 768; // 簡單的移動設備檢測
 
   const startTitleAnimation = useCallback(() => {
     let index = 0;
@@ -182,7 +191,7 @@ export function TodoList() {
   };
 
   const startEditing = (id: number, text: string, event: React.MouseEvent) => {
-    // 防止觸發 checkbox 的點擊事件
+    // 防��觸發 checkbox 的點擊事件
     event.stopPropagation();
     setEditingId(id);
     setEditText(text);
@@ -318,38 +327,57 @@ export function TodoList() {
                                 </div>
                                 <div className={`flex space-x-1 ml-2 ${editingId === todo.id ? '' : 'opacity-0 group-hover:opacity-100'} transition-opacity duration-200`}>
                                   {editingId === todo.id ? (
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Button variant="ghost" size="icon" onClick={() => saveEdit(todo.id)}>
-                                          <Check size={16} />
-                                        </Button>
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        <p>{t('save')}</p>
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  ) : (
-                                    <>
+                                    isMobile ? (
+                                      <Button variant="ghost" size="icon" onClick={() => saveEdit(todo.id)}>
+                                        <Check size={16} />
+                                      </Button>
+                                    ) : (
                                       <Tooltip>
                                         <TooltipTrigger asChild>
+                                          <Button variant="ghost" size="icon" onClick={() => saveEdit(todo.id)}>
+                                            <Check size={16} />
+                                          </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          <p>{t('save')}</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    )
+                                  ) : (
+                                    <>
+                                      {isMobile ? (
+                                        <>
                                           <Button variant="ghost" size="icon" onClick={(e) => startEditing(todo.id, todo.text, e)}>
                                             <Edit2 size={16} />
                                           </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                          <p>{t('edit')}</p>
-                                        </TooltipContent>
-                                      </Tooltip>
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
                                           <Button variant="ghost" size="icon" onClick={() => deleteTodo(todo.id)}>
                                             <Trash2 size={16} />
                                           </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                          <p>{t('delete')}</p>
-                                        </TooltipContent>
-                                      </Tooltip>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Tooltip>
+                                            <TooltipTrigger asChild>
+                                              <Button variant="ghost" size="icon" onClick={(e) => startEditing(todo.id, todo.text, e)}>
+                                                <Edit2 size={16} />
+                                              </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                              <p>{t('edit')}</p>
+                                            </TooltipContent>
+                                          </Tooltip>
+                                          <Tooltip>
+                                            <TooltipTrigger asChild>
+                                              <Button variant="ghost" size="icon" onClick={() => deleteTodo(todo.id)}>
+                                                <Trash2 size={16} />
+                                              </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                              <p>{t('delete')}</p>
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        </>
+                                      )}
                                     </>
                                   )}
                                 </div>
@@ -378,7 +406,7 @@ export function TodoList() {
             </CardContent>
           </Card>
           {completedTodos.length > 0 && (
-            <CompletedPanel completedTodos={completedTodos} onRestore={restoreTodo} />
+            <CompletedPanel completedTodos={completedTodos} onRestore={restoreTodo} isMobile={isMobile} />
           )}
         </div>
       </DragDropContext>

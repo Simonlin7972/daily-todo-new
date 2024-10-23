@@ -8,7 +8,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-export function LanguageToggle() {
+interface LanguageToggleProps {
+  isMobile?: boolean;
+}
+
+export function LanguageToggle({ isMobile = false }: LanguageToggleProps) {
   const { i18n, t } = useTranslation()
 
   const toggleLanguage = () => {
@@ -16,18 +20,32 @@ export function LanguageToggle() {
     i18n.changeLanguage(newLang)
   }
 
+  const buttonContent = (
+    <>
+      <Globe className="h-[1rem] w-[1rem]" />
+      <span>{i18n.language === 'en' ? 'EN' : '繁中'}</span>
+    </>
+  )
+
+  const button = (
+    <Button 
+      variant="outline" 
+      onClick={toggleLanguage} 
+      className={`flex items-center space-x-2 ${isMobile ? 'w-full justify-start' : 'w-auto h-10 px-3'}`}
+    >
+      {buttonContent}
+    </Button>
+  )
+
+  if (isMobile) {
+    return button
+  }
+
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button 
-            variant="outline" 
-            onClick={toggleLanguage} 
-            className="w-auto h-10 px-3 flex items-center space-x-2"
-          >
-            <Globe className="h-[1rem] w-[1rem]" />
-            <span>{i18n.language === 'en' ? 'EN' : '繁中'}</span>
-          </Button>
+          {button}
         </TooltipTrigger>
         <TooltipContent>
           <p>{t('toggleLanguage')}</p>
