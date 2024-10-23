@@ -11,5 +11,10 @@
   "restore": "Restore",
   "addData": "Add Data",
   "reset": "Reset",
-  "whatDoYouWantToGetDoneToday": "What do you want to get done today?"
+  "whatDoYouWantToGetDoneToday": "What do you want to get done today?",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "themeSystem": "System",
+  "toggleLanguage": "Switch Language",
+  "toggleTheme": "Switch Theme"
 }

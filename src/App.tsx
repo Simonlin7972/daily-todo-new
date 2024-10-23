@@ -11,23 +11,23 @@ function App() {
   const { t } = useTranslation();
 
   return (
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <div className="min-h-screen font-sans antialiased bg-background text-foreground">
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <div className="min-h-screen font-sans antialiased bg-background text-foreground flex flex-col">
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex h-16 items-center justify-between px-4">
-            <div className="flex-1"></div>
-            <div className="flex items-center justify-center flex-1">
-              <a className="flex items-center space-x-2 " href="/">  
-                <span className="font-['Pacifico'] text-2xl font-bold text-primary">{t('appTitle')}</span>
+          <div className="flex h-16 items-center px-4">
+            <div className="flex-shrink-0 w-16"></div>
+            <div className="flex-grow flex items-center justify-center">
+              <a className="flex items-center space-x-2" href="/">  
+                <span className="font-['Pacifico'] text-2xl font-bold text-primary whitespace-nowrap">{t('appTitle')}</span>
               </a>
             </div>
-            <div className="flex-1 flex justify-end space-x-2">
+            <div className="flex-shrink-0 w-24 flex justify-end items-center space-x-1">
               <LanguageToggle />
               <ModeToggle />
             </div>
           </div>
         </header>
-        <main className="w-full min-h-screen py-6">
+        <main className="flex-grow w-full py-6">
           <TodoList />
         </main>
         <div className="fixed bottom-4 right-4 space-x-2">
