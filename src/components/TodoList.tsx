@@ -115,8 +115,8 @@ export function TodoList() {
     const resetBtn = document.getElementById('resetBtn');
 
     const addSampleData = () => {
-      setTodos(prevTodos => [...prevTodos, ...sampleData.todos]);
-      setCompletedTodos(prevCompleted => [...prevCompleted, ...sampleData.completedTodos]);
+      setTodos(prevTodos => [...prevTodos, ...sampleData.todos as Todo[]]);
+      setCompletedTodos(prevCompleted => [...prevCompleted, ...sampleData.completedTodos as Todo[]]);
     };
 
     const resetApp = () => {
@@ -150,7 +150,7 @@ export function TodoList() {
     const updatedTodos = [...todos];
     updatedTodos.splice(index + 1, 0, newSection);
     setTodos(updatedTodos);
-    startEditing(newSection.id, newSection.text);
+    startEditing(newSection.id, newSection.text, {} as React.MouseEvent);
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -277,13 +277,14 @@ export function TodoList() {
                 {(provided, snapshot) => (
                   <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
                     {todos.map((todo, index) => (
-                      <React.Fragment key={todo.id}>
-                        <Draggable draggableId={todo.id.toString()} index={index}>
-                          {(provided, snapshot) => (
+                      <Draggable key={todo.id} draggableId={todo.id.toString()} index={index}>
+                        {(provided, snapshot) => (
+                          <React.Fragment>
                             <li
                               ref={provided.innerRef}
                               {...provided.draggableProps}
-                              className={`flex items-center group ${snapshot.isDragging ? 'rotate-1' : ''} ${transitioning === todo.id ? 'opacity-50 transition-all duration-300' : ''}`}
+                              {...provided.dragHandleProps}
+                              className={`flex items-center group ${snapshot.isDragging ? 'opacity-70' : ''} ${transitioning === todo.id ? 'opacity-70 transition-all duration-300' : ''}`}
                             >
                               <Tooltip>
                                 <TooltipTrigger asChild>
@@ -364,30 +365,12 @@ export function TodoList() {
                                 </div>
                               </div>
                             </li>
-                          )}
-                        </Draggable>
-                        {snapshot.isDraggingOver && snapshot.draggingOverWith !== todo.id.toString() && index === snapshot.index && (
-                          <li className="h-[52px] bg-gray-200 dark:bg-gray-700 rounded-md my-2 transition-all duration-200"></li>
+                            {snapshot.isDragging && (
+                              <li className="h-[52px] ml-8 bg-gray-100 dark:bg-gray-800 rounded-md my-2 transition-all duration-200"></li>
+                            )}
+                          </React.Fragment>
                         )}
-                        {hoveringIndex === index && (
-                          <div 
-                            className="h-8 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-md my-1 cursor-pointer"
-                            onClick={() => addSection(index)}
-                            onMouseLeave={() => setHoveringIndex(null)}
-                          >
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <Plus size={16} className="mr-1" /> Add Section
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Add a new section</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </div>
-                        )}
-                      </React.Fragment>
+                      </Draggable>
                     ))}
                     {provided.placeholder}
                   </ul>
