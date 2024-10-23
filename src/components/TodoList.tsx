@@ -9,6 +9,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Progress } from "@/components/ui/progress";
 import './TodoList.css';
 import sampleData from '../sampleData.json';
+import { useTranslation } from 'react-i18next';
 
 interface Todo {
   id: number;
@@ -21,19 +22,20 @@ const CompletedPanel: React.FC<{
   completedTodos: Todo[];
   onRestore: (id: number) => void;
 }> = ({ completedTodos, onRestore }) => {
+  const { t } = useTranslation();
   const progressValue = Math.min(completedTodos.length, 10) * 10;
   const isCompleted = completedTodos.length >= 10;
 
   return (
     <Card className="w-full lg:max-w-md shadow-sm rounded-xl">
       <CardHeader>
-        <CardTitle className="mb-4">What I've done today</CardTitle>
+        <CardTitle className="mb-4">{t('whatIveDoneToday')}</CardTitle>
         <Progress 
           value={progressValue} 
           className={`w-full h-2 mt-2 ${isCompleted ? 'bg-primary' : ''}`} 
         />
         <p className="text-sm text-muted-foreground pt-2">
-          {completedTodos.length} / 10 tasks completed
+          {t('tasksCompleted', { count: completedTodos.length })}
         </p>
       </CardHeader>
       <CardContent>
@@ -60,7 +62,7 @@ const CompletedPanel: React.FC<{
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Restore</p>
+                          <p>{t('restore')}</p>
                         </TooltipContent>
                       </Tooltip>
                     </li>
@@ -77,6 +79,7 @@ const CompletedPanel: React.FC<{
 };
 
 export function TodoList() {
+  const { t } = useTranslation();
   const [todos, setTodos] = useState<Todo[]>([]);
   const [completedTodos, setCompletedTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState('');
@@ -84,7 +87,7 @@ export function TodoList() {
   const [editText, setEditText] = useState('');
   const [hoveringIndex, setHoveringIndex] = useState<number | null>(null);
   const [titleText, setTitleText] = useState('');
-  const fullTitle = "What do you want to get done today?";
+  const fullTitle = t('whatDoYouWantToGetDoneToday');
   const [shouldResetTitle, setShouldResetTitle] = useState(false);
   const [transitioning, setTransitioning] = useState<number | null>(null);
 
@@ -265,10 +268,10 @@ export function TodoList() {
                   value={newTodo}
                   onChange={(e) => setNewTodo(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Add any new task"
+                  placeholder={t('addTodoPlaceholder')}
                   className="flex-grow h-14 ml-7 transition-all duration-200 border-2 hover:border-gray-600 dark:hover:border-gray-500 hover:border-2 focus:border-2 focus:border-primary rounded-lg"
                 />
-                <Button onClick={addTodo} disabled={newTodo.trim() === ''} className="h-14 w-32 font-bold rounded-lg">Add</Button>
+                <Button onClick={addTodo} disabled={newTodo.trim() === ''} className="h-14 w-32 font-bold rounded-lg">{t('addTodo')}</Button>
               </div>
               <Droppable droppableId="todos">
                 {(provided, snapshot) => (
@@ -292,7 +295,7 @@ export function TodoList() {
                                   </span>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                  <p>Drag to reorder</p>
+                                  <p>{t('dragToReorder')}</p>
                                 </TooltipContent>
                               </Tooltip>
                               <div className={`flex items-center justify-between p-2 rounded-lg border bg-card text-card-foreground shadow-sm flex-grow ${todo.type === 'section' ? 'bg-secondary' : ''} ${snapshot.isDragging ? 'rotate-1' : ''} hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-200`}>
@@ -331,7 +334,7 @@ export function TodoList() {
                                         </Button>
                                       </TooltipTrigger>
                                       <TooltipContent>
-                                        <p>Save</p>
+                                        <p>{t('save')}</p>
                                       </TooltipContent>
                                     </Tooltip>
                                   ) : (
@@ -343,7 +346,7 @@ export function TodoList() {
                                           </Button>
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                          <p>Edit</p>
+                                          <p>{t('edit')}</p>
                                         </TooltipContent>
                                       </Tooltip>
                                       <Tooltip>
@@ -353,7 +356,7 @@ export function TodoList() {
                                           </Button>
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                          <p>Delete</p>
+                                          <p>{t('delete')}</p>
                                         </TooltipContent>
                                       </Tooltip>
                                     </>

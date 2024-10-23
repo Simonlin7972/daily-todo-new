@@ -1,0 +1,15 @@
+{
+  "appTitle": "Simple Daily Todo",
+  "addTodo": "Add",
+  "addTodoPlaceholder": "Add any new task",
+  "whatIveDoneToday": "What I've done today",
+  "tasksCompleted": "{{count}} / 10 tasks completed",
+  "dragToReorder": "Drag to reorder",
+  "edit": "Edit",
+  "delete": "Delete",
+  "save": "Save",
+  "restore": "Restore",
+  "addData": "Add Data",
+  "reset": "Reset",
+  "whatDoYouWantToGetDoneToday": "What do you want to get done today?"
+}
