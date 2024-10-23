@@ -114,7 +114,9 @@ export function TodoList() {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  const startEditing = (id: number, text: string) => {
+  const startEditing = (id: number, text: string, event: React.MouseEvent) => {
+    // 防止觸發 checkbox 的點擊事件
+    event.stopPropagation();
     setEditingId(id);
     setEditText(text);
   };
@@ -124,6 +126,12 @@ export function TodoList() {
       todo.id === id ? { ...todo, text: editText } : todo
     ));
     setEditingId(null);
+  };
+
+  const handleEditKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, id: number) => {
+    if (e.key === 'Enter') {
+      saveEdit(id);
+    }
   };
 
   const onDragEnd = (result: DropResult) => {
@@ -233,10 +241,18 @@ export function TodoList() {
                                     <Input
                                       value={editText}
                                       onChange={(e) => setEditText(e.target.value)}
+                                      onKeyDown={(e) => handleEditKeyDown(e, todo.id)}
+                                      onBlur={() => saveEdit(todo.id)}
+                                      autoFocus
                                       className="flex-grow mr-2"
                                     />
                                   ) : (
-                                    <span className={`${todo.completed ? 'line-through text-muted-foreground' : ''} text-sm flex-grow text-left ${todo.type === 'section' ? 'font-bold' : ''}`}>{todo.text}</span>
+                                    <span 
+                                      className={`${todo.completed ? 'line-through text-muted-foreground' : ''} text-sm flex-grow text-left ${todo.type === 'section' ? 'font-bold' : ''} cursor-pointer`}
+                                      onClick={(e) => startEditing(todo.id, todo.text, e)}
+                                    >
+                                      {todo.text}
+                                    </span>
                                   )}
                                 </div>
                                 <div className="flex space-x-1 ml-2">
@@ -252,27 +268,29 @@ export function TodoList() {
                                       </TooltipContent>
                                     </Tooltip>
                                   ) : (
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Button variant="ghost" size="icon" onClick={() => startEditing(todo.id, todo.text)}>
-                                          <Edit2 size={16} />
-                                        </Button>
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        <p>Edit</p>
-                                      </TooltipContent>
-                                    </Tooltip>
+                                    <>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Button variant="ghost" size="icon" onClick={(e) => startEditing(todo.id, todo.text, e)}>
+                                            <Edit2 size={16} />
+                                          </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          <p>Edit</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Button variant="ghost" size="icon" onClick={() => deleteTodo(todo.id)}>
+                                            <Trash2 size={16} />
+                                          </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          <p>Delete</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </>
                                   )}
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button variant="ghost" size="icon" onClick={() => deleteTodo(todo.id)}>
-                                        <Trash2 size={16} />
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>Delete</p>
-                                    </TooltipContent>
-                                  </Tooltip>
                                 </div>
                               </div>
                             </li>
