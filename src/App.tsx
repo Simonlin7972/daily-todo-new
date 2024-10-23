@@ -13,7 +13,7 @@ function App() {
             <div className="flex-1"></div>
             <div className="flex items-center justify-center flex-1">
               <a className="flex items-center space-x-2 " href="/">  
-                <span className="font-['Pacifico'] text-2xl font-bold text-primary">Simon's Daily Todo</span>
+                <span className="font-['Pacifico'] text-2xl font-bold text-primary">'Daily Todo</span>
               </a>
             </div>
             <div className="flex-1 flex justify-end">

@@ -25,7 +25,7 @@ const CompletedPanel: React.FC<{
   const isCompleted = completedTodos.length >= 10;
 
   return (
-    <Card className="w-full lg:max-w-md">
+    <Card className="w-full lg:max-w-md shadow-sm">
       <CardHeader>
         <CardTitle className="mb-4">What I've done today</CardTitle>
         <Progress 
@@ -86,6 +86,7 @@ export function TodoList() {
   const [titleText, setTitleText] = useState('');
   const fullTitle = "What do you want to get done today?";
   const [shouldResetTitle, setShouldResetTitle] = useState(false);
+  const [transitioning, setTransitioning] = useState<number | null>(null);
 
   const startTitleAnimation = useCallback(() => {
     let index = 0;
@@ -157,15 +158,21 @@ export function TodoList() {
 
   const toggleTodo = (id: number) => {
     const todoToToggle = todos.find(todo => todo.id === id);
-    if (todoToToggle) {
-      if (!todoToToggle.completed) {
+    if (todoToToggle && !todoToToggle.completed) {
+      setTransitioning(id);
+      setTodos(todos.map(todo =>
+        todo.id === id ? { ...todo, completed: true } : todo
+      ));
+      
+      setTimeout(() => {
         setCompletedTodos([...completedTodos, { ...todoToToggle, completed: true }]);
         setTodos(todos.filter(todo => todo.id !== id));
-      } else {
-        setTodos(todos.map(todo =>
-          todo.id === id ? { ...todo, completed: !todo.completed } : todo
-        ));
-      }
+        setTransitioning(null);
+      }, 300);
+    } else if (todoToToggle) {
+      setTodos(todos.map(todo =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      ));
     }
   };
 
@@ -245,22 +252,23 @@ export function TodoList() {
     <TooltipProvider>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex flex-col lg:flex-row justify-center lg:space-x-4 w-full max-w-5xl mx-auto px-4 lg:px-0">
-          <Card className="w-full lg:max-w-xl mb-4 lg:mb-0">
+          <Card className="w-full lg:max-w-xl mb-4 lg:mb-0 shadow-sm">
             <CardHeader>
               <CardTitle className="typewriter-title">
                 {titleText}<span className="caret"></span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex space-x-2 mb-4">
+              <div className="flex space-x-4 mb-4">
                 <Input
                   type="text"
                   value={newTodo}
                   onChange={(e) => setNewTodo(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Add a new todo"
+                  placeholder="Add any new task"
+                  className="flex-grow h-14 ml-7 transition-all duration-200 border-2 hover:border-gray-600 dark:hover:border-gray-500 hover:border-2 focus:border-2 focus:border-primary"
                 />
-                <Button onClick={addTodo} disabled={newTodo.trim() === ''}>Add</Button>
+                <Button onClick={addTodo} disabled={newTodo.trim() === ''} className="h-14 w-32 font-bold">Add</Button>
               </div>
               <Droppable droppableId="todos">
                 {(provided, snapshot) => (
@@ -272,7 +280,7 @@ export function TodoList() {
                             <li
                               ref={provided.innerRef}
                               {...provided.draggableProps}
-                              className={`flex items-center group ${snapshot.isDragging ? 'rotate-1' : ''}`}
+                              className={`flex items-center group ${snapshot.isDragging ? 'rotate-1' : ''} ${transitioning === todo.id ? 'opacity-50 transition-all duration-300' : ''}`}
                             >
                               <Tooltip>
                                 <TooltipTrigger asChild>
