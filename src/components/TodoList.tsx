@@ -22,14 +22,18 @@ const CompletedPanel: React.FC<{
   onRestore: (id: number) => void;
 }> = ({ completedTodos, onRestore }) => {
   const progressValue = Math.min(completedTodos.length, 10) * 10;
+  const isCompleted = completedTodos.length >= 10;
 
   return (
     <Card className="w-full lg:max-w-md">
       <CardHeader>
         <CardTitle className="mb-4">What I've done today</CardTitle>
-        <Progress value={progressValue} className="w-full h-2 mt-2" />
+        <Progress 
+          value={progressValue} 
+          className={`w-full h-2 mt-2 ${isCompleted ? 'bg-primary' : ''}`} 
+        />
         <p className="text-sm text-muted-foreground pt-2">
-          {Math.min(completedTodos.length, 10)} / 10 tasks completed
+          {completedTodos.length} / 10 tasks completed
         </p>
       </CardHeader>
       <CardContent>
@@ -43,7 +47,7 @@ const CompletedPanel: React.FC<{
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      className="flex items-center justify-between p-2 pl-4 rounded-md border bg-card text-card-foreground shadow-sm"
+                      className="flex items-center justify-between p-2 pl-4 rounded-md border bg-card text-card-foreground shadow-sm hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-200"
                     >
                       <div className="flex items-center">
                         <Check size={20} className="text-gray-300 mr-2" />
@@ -283,7 +287,7 @@ export function TodoList() {
                                   <p>Drag to reorder</p>
                                 </TooltipContent>
                               </Tooltip>
-                              <div className={`flex items-center justify-between p-2 rounded-md border bg-card text-card-foreground shadow-sm flex-grow ${todo.type === 'section' ? 'bg-secondary' : ''} ${snapshot.isDragging ? 'rotate-1' : ''}`}>
+                              <div className={`flex items-center justify-between p-2 rounded-md border bg-card text-card-foreground shadow-sm flex-grow ${todo.type === 'section' ? 'bg-secondary' : ''} ${snapshot.isDragging ? 'rotate-1' : ''} hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-200`}>
                                 <div className="flex items-center flex-grow">
                                   {todo.type === 'todo' && (
                                     <Checkbox
@@ -310,7 +314,7 @@ export function TodoList() {
                                     </span>
                                   )}
                                 </div>
-                                <div className="flex space-x-1 ml-2">
+                                <div className={`flex space-x-1 ml-2 ${editingId === todo.id ? '' : 'opacity-0 group-hover:opacity-100'} transition-opacity duration-200`}>
                                   {editingId === todo.id ? (
                                     <Tooltip>
                                       <TooltipTrigger asChild>

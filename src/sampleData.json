@@ -2,93 +2,45 @@
   "todos": [
     {
       "id": 1,
-      "text": "Prepare presentation for team meeting",
+      "text": "Buy groceries",
       "completed": false,
       "type": "todo"
     },
     {
       "id": 2,
-      "text": "Buy groceries for the week",
+      "text": "Clean the house",
       "completed": false,
       "type": "todo"
     },
     {
       "id": 3,
-      "text": "Schedule dentist appointment",
+      "text": "Pay bills",
       "completed": false,
       "type": "todo"
     },
     {
       "id": 4,
-      "text": "Work Tasks",
+      "text": "Exercise",
       "completed": false,
-      "type": "section"
+      "type": "todo"
     },
     {
       "id": 5,
-      "text": "Review and respond to emails",
-      "completed": false,
-      "type": "todo"
-    },
-    {
-      "id": 6,
-      "text": "Update project documentation",
-      "completed": false,
-      "type": "todo"
-    },
-    {
-      "id": 7,
-      "text": "Personal Tasks",
-      "completed": false,
-      "type": "section"
-    },
-    {
-      "id": 8,
-      "text": "Go for a 30-minute jog",
-      "completed": false,
-      "type": "todo"
-    },
-    {
-      "id": 9,
-      "text": "Read 20 pages of current book",
-      "completed": false,
-      "type": "todo"
-    },
-    {
-      "id": 10,
-      "text": "Plan weekend activities",
+      "text": "Read a book",
       "completed": false,
       "type": "todo"
     }
   ],
   "completedTodos": [
     {
-      "id": 11,
-      "text": "Pay monthly bills",
+      "id": 6,
+      "text": "Make dinner",
       "completed": true,
       "type": "todo"
     },
     {
-      "id": 12,
-      "text": "Call mom for her birthday",
-      "completed": true,
-      "type": "todo"
-    },
-    {
-      "id": 13,
-      "text": "Submit expense report",
-      "completed": true,
-      "type": "todo"
-    },
-    {
-      "id": 14,
-      "text": "Water the plants",
-      "completed": true,
-      "type": "todo"
-    },
-    {
-      "id": 15,
-      "text": "Organize desk and files",
+      "id": 7,
+      "text": "Call a friend",
       "completed": true,
       "type": "todo"
     }
