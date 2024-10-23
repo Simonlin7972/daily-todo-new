@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
 import './TodoList.css';
+import sampleData from '../sampleData.json';
 
 interface Todo {
   id: number;
@@ -106,22 +107,8 @@ export function TodoList() {
     const resetBtn = document.getElementById('resetBtn');
 
     const addSampleData = () => {
-      const sampleTodos = Array.from({ length: 10 }, (_, i) => ({
-        id: Date.now() + i,
-        text: `Sample Todo ${i + 1}`,
-        completed: false,
-        type: 'todo' as const
-      }));
-
-      const sampleCompletedTodos = Array.from({ length: 10 }, (_, i) => ({
-        id: Date.now() + i + 10,
-        text: `Completed Todo ${i + 1}`,
-        completed: true,
-        type: 'todo' as const
-      }));
-
-      setTodos(prevTodos => [...prevTodos, ...sampleTodos]);
-      setCompletedTodos(prevCompleted => [...prevCompleted, ...sampleCompletedTodos]);
+      setTodos(prevTodos => [...prevTodos, ...sampleData.todos]);
+      setCompletedTodos(prevCompleted => [...prevCompleted, ...sampleData.completedTodos]);
     };
 
     const resetApp = () => {
@@ -312,7 +299,7 @@ export function TodoList() {
                                       onKeyDown={(e) => handleEditKeyDown(e, todo.id)}
                                       onBlur={() => saveEdit(todo.id)}
                                       autoFocus
-                                      className="flex-grow mr-2"
+                                      className="flex-grow mr-2 h-8"
                                     />
                                   ) : (
                                     <span 
