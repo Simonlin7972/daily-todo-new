@@ -65,10 +65,17 @@ module.exports = {
                     from: { height: "var(--radix-accordion-content-height)" },
                     to: { height: 0 },
                 },
+                // 新增 tooltip 動畫
+                "tooltip-show": {
+                    "0%": { opacity: 0, transform: "scale(0.95)" },
+                    "100%": { opacity: 1, transform: "scale(1)" },
+                },
             },
             animation: {
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",
+                // 新增 tooltip 動畫
+                "tooltip-show": "tooltip-show 0.1s ease-out", // 將持續時間從默認的 0.2s 減少到 0.1s
             },
         },
     },
