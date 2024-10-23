@@ -25,7 +25,7 @@ const CompletedPanel: React.FC<{
   const isCompleted = completedTodos.length >= 10;
 
   return (
-    <Card className="w-full lg:max-w-md shadow-sm">
+    <Card className="w-full lg:max-w-md shadow-sm rounded-xl">
       <CardHeader>
         <CardTitle className="mb-4">What I've done today</CardTitle>
         <Progress 
@@ -47,7 +47,7 @@ const CompletedPanel: React.FC<{
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      className="flex items-center justify-between p-2 pl-4 rounded-md border bg-card text-card-foreground shadow-sm hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-200"
+                      className="flex items-center justify-between p-2 pl-4 rounded-lg border bg-card text-card-foreground shadow-sm hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-200"
                     >
                       <div className="flex items-center">
                         <Check size={20} className="text-gray-300 mr-2" />
@@ -252,7 +252,7 @@ export function TodoList() {
     <TooltipProvider>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex flex-col lg:flex-row justify-center lg:space-x-4 w-full max-w-5xl mx-auto px-4 lg:px-0">
-          <Card className="w-full lg:max-w-xl mb-4 lg:mb-0 shadow-sm">
+          <Card className="w-full lg:max-w-xl mb-4 lg:mb-0 shadow-sm rounded-xl">
             <CardHeader>
               <CardTitle className="typewriter-title">
                 {titleText}<span className="caret"></span>
@@ -266,9 +266,9 @@ export function TodoList() {
                   onChange={(e) => setNewTodo(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Add any new task"
-                  className="flex-grow h-14 ml-7 transition-all duration-200 border-2 hover:border-gray-600 dark:hover:border-gray-500 hover:border-2 focus:border-2 focus:border-primary"
+                  className="flex-grow h-14 ml-7 transition-all duration-200 border-2 hover:border-gray-600 dark:hover:border-gray-500 hover:border-2 focus:border-2 focus:border-primary rounded-lg"
                 />
-                <Button onClick={addTodo} disabled={newTodo.trim() === ''} className="h-14 w-32 font-bold">Add</Button>
+                <Button onClick={addTodo} disabled={newTodo.trim() === ''} className="h-14 w-32 font-bold rounded-lg">Add</Button>
               </div>
               <Droppable droppableId="todos">
                 {(provided, snapshot) => (
@@ -295,7 +295,7 @@ export function TodoList() {
                                   <p>Drag to reorder</p>
                                 </TooltipContent>
                               </Tooltip>
-                              <div className={`flex items-center justify-between p-2 rounded-md border bg-card text-card-foreground shadow-sm flex-grow ${todo.type === 'section' ? 'bg-secondary' : ''} ${snapshot.isDragging ? 'rotate-1' : ''} hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-200`}>
+                              <div className={`flex items-center justify-between p-2 rounded-lg border bg-card text-card-foreground shadow-sm flex-grow ${todo.type === 'section' ? 'bg-secondary' : ''} ${snapshot.isDragging ? 'rotate-1' : ''} hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-200`}>
                                 <div className="flex items-center flex-grow">
                                   {todo.type === 'todo' && (
                                     <Checkbox
