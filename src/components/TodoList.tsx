@@ -1,9 +1,9 @@
-import React, { useState, KeyboardEvent, useEffect } from 'react';
+import React, { useState, KeyboardEvent, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
-import { GripVertical, Trash2, Edit2, Check, Plus, Undo2 } from 'lucide-react';
+import { GripVertical, Trash2, Edit2, Check, Plus, Undo2, CheckCircle2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
@@ -44,10 +44,20 @@ const CompletedPanel: React.FC<{
                       {...provided.dragHandleProps}
                       className="flex items-center justify-between p-2 pl-4 rounded-md border bg-card text-card-foreground shadow-sm"
                     >
-                      <span className="text-sm line-through truncate mr-2">{todo.text}</span>
-                      <Button variant="ghost" size="icon" onClick={() => onRestore(todo.id)}>
-                        <Undo2 size={16} />
-                      </Button>
+                      <div className="flex items-center">
+                        <Check size={20} className="text-gray-300 mr-2" />
+                        <span className="text-sm line-through truncate">{todo.text}</span>
+                      </div>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="ghost" size="icon" onClick={() => onRestore(todo.id)}>
+                            <Undo2 size={16} />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Restore</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </li>
                   )}
                 </Draggable>
@@ -70,18 +80,67 @@ export function TodoList() {
   const [hoveringIndex, setHoveringIndex] = useState<number | null>(null);
   const [titleText, setTitleText] = useState('');
   const fullTitle = "What do you want to get done today?";
+  const [shouldResetTitle, setShouldResetTitle] = useState(false);
 
-  useEffect(() => {
+  const startTitleAnimation = useCallback(() => {
     let index = 0;
+    setTitleText('');
     const intervalId = setInterval(() => {
-      setTitleText(fullTitle.slice(0, index));
+      setTitleText(prev => fullTitle.slice(0, prev.length + 1));
       index++;
-      if (index > fullTitle.length) {
+      if (index >= fullTitle.length) {
         clearInterval(intervalId);
       }
-    }, 100); // Adjust the speed of typing here
+    }, 100);
 
     return () => clearInterval(intervalId);
+  }, [fullTitle]);
+
+  useEffect(() => {
+    const cleanup = startTitleAnimation();
+    return cleanup;
+  }, [startTitleAnimation, shouldResetTitle]);
+
+  useEffect(() => {
+    const addDataBtn = document.getElementById('addDataBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const addSampleData = () => {
+      const sampleTodos = Array.from({ length: 10 }, (_, i) => ({
+        id: Date.now() + i,
+        text: `Sample Todo ${i + 1}`,
+        completed: false,
+        type: 'todo' as const
+      }));
+
+      const sampleCompletedTodos = Array.from({ length: 10 }, (_, i) => ({
+        id: Date.now() + i + 10,
+        text: `Completed Todo ${i + 1}`,
+        completed: true,
+        type: 'todo' as const
+      }));
+
+      setTodos(prevTodos => [...prevTodos, ...sampleTodos]);
+      setCompletedTodos(prevCompleted => [...prevCompleted, ...sampleCompletedTodos]);
+    };
+
+    const resetApp = () => {
+      setTodos([]);
+      setCompletedTodos([]);
+      setNewTodo('');
+      setEditingId(null);
+      setEditText('');
+      setHoveringIndex(null);
+      setShouldResetTitle(prev => !prev); // 觸發標題動畫重置
+    };
+
+    addDataBtn?.addEventListener('click', addSampleData);
+    resetBtn?.addEventListener('click', resetApp);
+
+    return () => {
+      addDataBtn?.removeEventListener('click', addSampleData);
+      resetBtn?.removeEventListener('click', resetApp);
+    };
   }, []);
 
   const addTodo = () => {
@@ -123,7 +182,9 @@ export function TodoList() {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  const startEditing = (id: number, text: string) => {
+  const startEditing = (id: number, text: string, event: React.MouseEvent) => {
+    // 防止觸發 checkbox 的點擊事件
+    event.stopPropagation();
     setEditingId(id);
     setEditText(text);
   };
@@ -211,16 +272,16 @@ export function TodoList() {
                 <Button onClick={addTodo} disabled={newTodo.trim() === ''}>Add</Button>
               </div>
               <Droppable droppableId="todos">
-                {(provided) => (
+                {(provided, snapshot) => (
                   <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
                     {todos.map((todo, index) => (
                       <React.Fragment key={todo.id}>
                         <Draggable draggableId={todo.id.toString()} index={index}>
-                          {(provided) => (
+                          {(provided, snapshot) => (
                             <li
                               ref={provided.innerRef}
                               {...provided.draggableProps}
-                              className="flex items-center group"
+                              className={`flex items-center group ${snapshot.isDragging ? 'rotate-1' : ''}`}
                             >
                               <Tooltip>
                                 <TooltipTrigger asChild>
@@ -235,7 +296,7 @@ export function TodoList() {
                                   <p>Drag to reorder</p>
                                 </TooltipContent>
                               </Tooltip>
-                              <div className={`flex items-center justify-between p-2 rounded-md border bg-card text-card-foreground shadow-sm flex-grow ${todo.type === 'section' ? 'bg-secondary' : ''}`}>
+                              <div className={`flex items-center justify-between p-2 rounded-md border bg-card text-card-foreground shadow-sm flex-grow ${todo.type === 'section' ? 'bg-secondary' : ''} ${snapshot.isDragging ? 'rotate-1' : ''}`}>
                                 <div className="flex items-center flex-grow">
                                   {todo.type === 'todo' && (
                                     <Checkbox
@@ -249,11 +310,17 @@ export function TodoList() {
                                       value={editText}
                                       onChange={(e) => setEditText(e.target.value)}
                                       onKeyDown={(e) => handleEditKeyDown(e, todo.id)}
+                                      onBlur={() => saveEdit(todo.id)}
                                       autoFocus
                                       className="flex-grow mr-2"
                                     />
                                   ) : (
-                                    <span className={`${todo.completed ? 'line-through text-muted-foreground' : ''} text-sm flex-grow text-left ${todo.type === 'section' ? 'font-bold' : ''}`}>{todo.text}</span>
+                                    <span 
+                                      className={`${todo.completed ? 'line-through text-muted-foreground' : ''} text-sm flex-grow text-left ${todo.type === 'section' ? 'font-bold' : ''} cursor-pointer`}
+                                      onClick={(e) => startEditing(todo.id, todo.text, e)}
+                                    >
+                                      {todo.text}
+                                    </span>
                                   )}
                                 </div>
                                 <div className="flex space-x-1 ml-2">
@@ -272,7 +339,7 @@ export function TodoList() {
                                     <>
                                       <Tooltip>
                                         <TooltipTrigger asChild>
-                                          <Button variant="ghost" size="icon" onClick={() => startEditing(todo.id, todo.text)}>
+                                          <Button variant="ghost" size="icon" onClick={(e) => startEditing(todo.id, todo.text, e)}>
                                             <Edit2 size={16} />
                                           </Button>
                                         </TooltipTrigger>
@@ -297,6 +364,9 @@ export function TodoList() {
                             </li>
                           )}
                         </Draggable>
+                        {snapshot.isDraggingOver && snapshot.draggingOverWith !== todo.id.toString() && index === snapshot.index && (
+                          <li className="h-[52px] bg-gray-200 dark:bg-gray-700 rounded-md my-2 transition-all duration-200"></li>
+                        )}
                         {hoveringIndex === index && (
                           <div 
                             className="h-8 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-md my-1 cursor-pointer"
