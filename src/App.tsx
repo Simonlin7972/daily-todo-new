@@ -1,3 +1,4 @@
+import React from 'react'
 import { TodoList } from './components/TodoList'
 import { ThemeProvider } from "@/components/theme-provider"
 import { ModeToggle } from "@/components/mode-toggle"
@@ -7,7 +8,7 @@ import './App.css'
 import './i18n'
 import { useTranslation } from 'react-i18next'
 
-function App() {
+export const App: React.FC = () => {
   const { t } = useTranslation();
 
   return (
