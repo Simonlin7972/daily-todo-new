@@ -19,7 +19,7 @@ const CompletedPanel: React.FC<{
   completedTodos: Todo[];
   onRestore: (id: number) => void;
 }> = ({ completedTodos, onRestore }) => (
-  <Card className="w-full max-w-md">
+  <Card className="w-full lg:max-w-md">
     <CardHeader>
       <CardTitle>What I've done</CardTitle>
     </CardHeader>
@@ -34,7 +34,7 @@ const CompletedPanel: React.FC<{
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    className="flex items-center justify-between p-2 rounded-md border bg-card text-card-foreground shadow-sm"
+                    className="flex items-center justify-between p-2 pl-4 rounded-md border bg-card text-card-foreground shadow-sm"
                   >
                     <span className="text-sm line-through truncate mr-2">{todo.text}</span>
                     <Button variant="ghost" size="icon" onClick={() => onRestore(todo.id)}>
@@ -114,9 +114,7 @@ export function TodoList() {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  const startEditing = (id: number, text: string, event: React.MouseEvent) => {
-    // 防止觸發 checkbox 的點擊事件
-    event.stopPropagation();
+  const startEditing = (id: number, text: string) => {
     setEditingId(id);
     setEditText(text);
   };
@@ -185,8 +183,8 @@ export function TodoList() {
   return (
     <TooltipProvider>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex justify-center space-x-4 w-full max-w-5xl mx-auto">
-          <Card className="w-full max-w-xl">
+        <div className="flex flex-col lg:flex-row justify-center lg:space-x-4 w-full max-w-5xl mx-auto px-4 lg:px-0">
+          <Card className="w-full lg:max-w-xl mb-4 lg:mb-0">
             <CardHeader>
               <CardTitle className="typewriter-title">
                 {titleText}<span className="caret"></span>
@@ -242,17 +240,11 @@ export function TodoList() {
                                       value={editText}
                                       onChange={(e) => setEditText(e.target.value)}
                                       onKeyDown={(e) => handleEditKeyDown(e, todo.id)}
-                                      onBlur={() => saveEdit(todo.id)}
                                       autoFocus
                                       className="flex-grow mr-2"
                                     />
                                   ) : (
-                                    <span 
-                                      className={`${todo.completed ? 'line-through text-muted-foreground' : ''} text-sm flex-grow text-left ${todo.type === 'section' ? 'font-bold' : ''} cursor-pointer`}
-                                      onClick={(e) => startEditing(todo.id, todo.text, e)}
-                                    >
-                                      {todo.text}
-                                    </span>
+                                    <span className={`${todo.completed ? 'line-through text-muted-foreground' : ''} text-sm flex-grow text-left ${todo.type === 'section' ? 'font-bold' : ''}`}>{todo.text}</span>
                                   )}
                                 </div>
                                 <div className="flex space-x-1 ml-2">
@@ -271,7 +263,7 @@ export function TodoList() {
                                     <>
                                       <Tooltip>
                                         <TooltipTrigger asChild>
-                                          <Button variant="ghost" size="icon" onClick={(e) => startEditing(todo.id, todo.text, e)}>
+                                          <Button variant="ghost" size="icon" onClick={() => startEditing(todo.id, todo.text)}>
                                             <Edit2 size={16} />
                                           </Button>
                                         </TooltipTrigger>

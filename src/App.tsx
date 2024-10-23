@@ -9,12 +9,15 @@ function App() {
       <div className="min-h-screen bg-background font-sans antialiased">
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="flex h-14 items-center justify-between px-4">
-            <div className="flex items-center">
+            <div className="flex-1"></div>
+            <div className="flex items-center justify-center flex-1">
               <a className="flex items-center space-x-2" href="/">  
                 <span className="font-bold">Simon's Daily Todo</span>
               </a>
             </div>
-            <ModeToggle />
+            <div className="flex-1 flex justify-end">
+              <ModeToggle />
+            </div>
           </div>
         </header>
         <main className="w-full min-h-screen py-6 bg-slate-100 dark:bg-slate-800">
