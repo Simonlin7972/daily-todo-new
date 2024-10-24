@@ -8,5 +8,5 @@ export default defineConfig({
     alias: {
       '@': '/src',},
   },
-  base: 'daily-todo-new',
+  base: '/daily-todo-new/',
 })
