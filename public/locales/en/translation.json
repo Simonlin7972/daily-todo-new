@@ -25,5 +25,7 @@
   "resetTimer": "Reset timer",
    "todaysRecap": "Today's recap",
   "recapDescription": "Here's a summary of your completed tasks. Feel free to edit and reflect on your achievements.",
-  "saveRecap": "Save recap"
+  "saveRecap": "Save recap",
+  "dailyReview": "Daily review",
+  "todoList": "Todo list"
 }

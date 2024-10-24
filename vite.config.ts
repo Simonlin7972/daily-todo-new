@@ -6,7 +6,10 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': '/src',},
+      '@': '/src',
+      '@components': '/src/components',
+      '@utils': '/src/lib/utils',
+    },
   },
   base: '/daily-todo-new/',
 })

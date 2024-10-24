@@ -12,7 +12,9 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/components/*": ["src/components/*"],
+      "@/lib/utils/*": ["src/lib/utils/*"]
     },
     "esModuleInterop": true
   }

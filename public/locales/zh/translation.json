@@ -25,5 +25,7 @@
   "resetTimer": "重新計時",
     "todaysRecap": "今日回顧",
   "recapDescription": "這是你今天完成的任務摘要，你可以自由編輯並反思今天的成就。寫完之後可以儲存。",
-  "saveRecap": "儲存回顧"
+  "saveRecap": "儲存回顧",
+  "dailyReview": "每日回顧",
+  "todoList": "待辦事項"
 }
