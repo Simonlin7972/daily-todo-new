@@ -120,10 +120,13 @@ const CompletedPanel: React.FC<{
             </ul>
           )}
         </Droppable>
+        
+        {/* 今日recap 功能 */}
+        
         <Dialog>
           <DialogTrigger asChild>
             <div className="flex justify-center ml-4">
-              <Button className="w-full mt-4">{t('todaysRecap')}</Button>
+              <Button className="w-full mt-4 h-12 font-bold">{t('todaysRecap')}</Button>
             </div>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[480px] p-8">
@@ -139,10 +142,12 @@ const CompletedPanel: React.FC<{
                 onChange={(e) => setRecap(e.target.value)}
                 className="h-[200px]"
               />
-              <Button onClick={saveRecap}>{t('saveRecap')}</Button>
+              <Button onClick={saveRecap} className="w-full h-12 font-bold">{t('saveRecap')}</Button>
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* 今日recap 功能結束 */}
       </CardContent>
     </Card>
   );

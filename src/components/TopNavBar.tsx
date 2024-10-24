@@ -12,7 +12,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ currentTime }) => {
   const { t } = useTranslation();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
       <div className="relative flex h-16 items-center px-4">
         {/* App Title */}
         <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center">
