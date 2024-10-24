@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { TodoList } from './components/TodoList'
 import { ThemeProvider } from "@/components/theme-provider"
-import { ModeToggle } from "@/components/mode-toggle"
-import { LanguageToggle } from "@/components/language-toggle"
-import { MobileMenu } from "@/components/MobileMenu"
+import { TopNavBar } from "@/components/TopNavBar"
 import { BottomBar } from "@/components/BottomBar"
 import './App.css'
 import './i18n'
-import { useTranslation } from 'react-i18next'
 
 function App() {
-  const { t } = useTranslation();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -30,24 +26,8 @@ function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <div className="min-h-screen font-sans antialiased bg-background text-foreground flex flex-col">
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="relative flex h-16 items-center px-4">
-            <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center">
-              <a className="flex items-center space-x-2" href="/">  
-                <span className="font-['Pacifico'] text-2xl font-bold text-primary whitespace-nowrap">{t('appTitle')}</span>
-              </a>
-            </div>
-            <div className="ml-auto flex items-center space-x-4">
-              <span className="text-sm hidden md:inline">{formatTime(currentTime)}</span>
-              <div className="hidden md:flex items-center space-x-2">
-                <LanguageToggle />
-                <ModeToggle />
-              </div>
-              <MobileMenu currentTime={formatTime(currentTime)} />
-            </div>
-          </div>
-        </header>
-        <main className="flex-grow w-full py-8">
+        <TopNavBar currentTime={formatTime(currentTime)} />
+        <main className="flex-grow w-full py-8 pb-28 bg-gradient-to-b from-background to-muted">
           <TodoList />
         </main>
         <BottomBar />
