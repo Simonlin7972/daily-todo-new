@@ -5,9 +5,11 @@ import { ModeToggle } from "@/components/mode-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
 import { Button } from "@/components/ui/button"
 import { MobileMenu } from "@/components/MobileMenu"
+import { TimerButton } from "@/components/TimerButton";
 import './App.css'
 import './i18n'
 import { useTranslation } from 'react-i18next'
+
 
 export const App: React.FC = () => {
   const { t } = useTranslation();
@@ -54,9 +56,16 @@ export const App: React.FC = () => {
           <Button variant="outline" id="addDataBtn">{t('addData')}</Button>
           <Button variant="outline" id="resetBtn">{t('reset')}</Button>
         </div>
+        <div className="fixed bottom-4 left-4">
+          <TimerButton />
+        </div>
       </div>
     </ThemeProvider>
   )
 }
 
+
+
+
 export default App
+
