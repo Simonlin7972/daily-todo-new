@@ -17,6 +17,6 @@
   "themeSystem": "System",
   "toggleLanguage": "Switch Language",
   "toggleTheme": "Switch Theme",
-  "addSection": "Add Section",
-  "newSection": "New Section"
+  "addSection": "Add new section",
+  "newSection": "Enter section title"
 }

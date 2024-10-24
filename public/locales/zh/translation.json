@@ -17,6 +17,6 @@
   "themeSystem": "根據系統設定",
   "toggleLanguage": "切換語言",
   "toggleTheme": "切換主題",
-  "addSection": "新增分類",
-  "newSection": "新分類"
+  "addSection": "新增分類標題",
+  "newSection": "輸入分類標題"
 }

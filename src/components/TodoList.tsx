@@ -191,7 +191,7 @@ export function TodoList() {
   };
 
   const startEditing = (id: number, text: string, event: React.MouseEvent) => {
-    // 防��觸發 checkbox 的點擊事件
+    // 防觸發 checkbox 的點擊事件
     event.stopPropagation();
     setEditingId(id);
     setEditText(text);
@@ -294,7 +294,7 @@ export function TodoList() {
                             >
                               <span 
                                 {...provided.dragHandleProps} 
-                                className="mr-2 cursor-move text-gray-300 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200 opacity-0 group-hover:opacity-100"
+                                className={`mr-2 cursor-move text-gray-300 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200 ${isMobile ? '' : 'opacity-0 group-hover:opacity-100'}`}
                               >
                                 <GripVertical size={20} />
                               </span>
@@ -394,15 +394,17 @@ export function TodoList() {
                   </ul>
                 )}
               </Droppable>
-              <div className="ml-7">
-              <Button 
-                variant="ghost" 
-                className="w-full mt-2 text-muted-foreground hover:text-foreground transition-colors"
-                onClick={addSection}
-              >
-                + {t('addSection')}
-                </Button>
-              </div>
+              {todos.length > 0 && (
+                <div className="ml-7">
+                  <Button 
+                    variant="ghost" 
+                    className="w-full mt-2 text-muted-foreground hover:text-foreground transition-colors"
+                    onClick={addSection}
+                  >
+                    + {t('addSection')}
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
           {completedTodos.length > 0 && (
