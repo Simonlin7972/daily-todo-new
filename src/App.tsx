@@ -9,7 +9,7 @@ import './App.css'
 import './i18n'
 import { useTranslation } from 'react-i18next'
 
-const App: React.FC = () => {
+function App() {
   const { t } = useTranslation();
   const [currentTime, setCurrentTime] = useState(new Date());
 
