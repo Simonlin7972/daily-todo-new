@@ -18,5 +18,8 @@
   "toggleLanguage": "切換語言",
   "toggleTheme": "切換主題",
   "addSection": "新增分類標題",
-  "newSection": "輸入分類標題"
+  "newSection": "輸入分類標題",
+  "startTimer": "開始計時",
+  "pauseTimer": "暫停計時",
+  "resetTimer": "重新計時"
 }

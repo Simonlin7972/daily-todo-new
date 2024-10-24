@@ -18,5 +18,8 @@
   "toggleLanguage": "Switch Language",
   "toggleTheme": "Switch Theme",
   "addSection": "Add new section",
-  "newSection": "Enter section title"
+  "newSection": "Enter section title",
+  "startTimer": "Start Timer",
+  "pauseTimer": "Pause Timer",
+  "resetTimer": "Reset Timer"
 }

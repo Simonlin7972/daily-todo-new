@@ -5,10 +5,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useTranslation } from 'react-i18next';
 
 export function TimerButton() {
   const [isRunning, setIsRunning] = useState(false);
   const [time, setTime] = useState(0);
+  const { t } = useTranslation();
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -26,8 +28,7 @@ export function TimerButton() {
     return `${mins}:${secs}`;
   };
 
-  const startTimer = () => setIsRunning(true);
-  const pauseTimer = () => setIsRunning(false);
+  const toggleTimer = () => setIsRunning(!isRunning);
   const resetTimer = () => {
     setIsRunning(false);
     setTime(0);
@@ -36,15 +37,16 @@ export function TimerButton() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="fixed bottom-4 left-4 text-2xl font-bold">
+        <Button variant="outline" className="text-2xl font-bold">
           {formatTime(time)}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-48">
+      <PopoverContent className="w-48 mb-1" align="start" side="top">
         <div className="flex flex-col space-y-2">
-          <Button onClick={startTimer} disabled={isRunning}>開始計時</Button>
-          <Button onClick={pauseTimer} disabled={!isRunning}>暫停計時</Button>
-          <Button onClick={resetTimer}>重新計時</Button>
+          <Button variant="outline" onClick={toggleTimer}>
+            {isRunning ? t('pauseTimer') : t('startTimer')}
+          </Button>
+          <Button variant="secondary" onClick={resetTimer}>{t('resetTimer')}</Button>
         </div>
       </PopoverContent>
     </Popover>

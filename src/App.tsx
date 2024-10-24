@@ -3,13 +3,11 @@ import { TodoList } from './components/TodoList'
 import { ThemeProvider } from "@/components/theme-provider"
 import { ModeToggle } from "@/components/mode-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
-import { Button } from "@/components/ui/button"
 import { MobileMenu } from "@/components/MobileMenu"
-import { TimerButton } from "@/components/TimerButton";
+import { BottomBar } from "@/components/BottomBar"
 import './App.css'
 import './i18n'
 import { useTranslation } from 'react-i18next'
-
 
 export const App: React.FC = () => {
   const { t } = useTranslation();
@@ -49,23 +47,13 @@ export const App: React.FC = () => {
             </div>
           </div>
         </header>
-        <main className="flex-grow w-full py-12">
+        <main className="flex-grow w-full py-8">
           <TodoList />
         </main>
-        <div className="fixed bottom-4 right-4 space-x-2">
-          <Button variant="outline" id="addDataBtn">{t('addData')}</Button>
-          <Button variant="outline" id="resetBtn">{t('reset')}</Button>
-        </div>
-        <div className="fixed bottom-4 left-4">
-          <TimerButton />
-        </div>
+        <BottomBar />
       </div>
     </ThemeProvider>
   )
 }
 
-
-
-
 export default App
-
