@@ -10,6 +10,13 @@ import { Progress } from "@/components/ui/progress";
 import './TodoList.css';
 import sampleData from '../sampleData.json';
 import { useTranslation } from 'react-i18next';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface Todo {
   id: number;
@@ -22,10 +29,12 @@ const CompletedPanel: React.FC<{
   completedTodos: Todo[];
   onRestore: (id: number) => void;
   isMobile: boolean;
-}> = ({ completedTodos, onRestore, isMobile }) => {
+  targetTasks: number;
+  onTargetTasksChange: (value: number) => void;
+}> = ({ completedTodos, onRestore, isMobile, targetTasks, onTargetTasksChange }) => {
   const { t } = useTranslation();
-  const progressValue = Math.min(completedTodos.length, 10) * 10;
-  const isCompleted = completedTodos.length >= 10;
+  const progressValue = Math.min(completedTodos.length, targetTasks) * (100 / targetTasks);
+  const isCompleted = completedTodos.length >= targetTasks;
 
   return (
     <Card className="w-full lg:max-w-md shadow-sm rounded-xl">
@@ -35,8 +44,19 @@ const CompletedPanel: React.FC<{
           value={progressValue} 
           className={`w-full h-2 mt-2 ${isCompleted ? 'bg-primary' : ''}`} 
         />
-        <p className="text-sm text-muted-foreground pt-2">
-          {t('tasksCompleted', { count: completedTodos.length })}
+        <p className="text-sm text-muted-foreground pt-2 flex items-center justify-center">
+          {t('tasksCompleted', { count: completedTodos.length })} / 
+          <Select onValueChange={(value) => onTargetTasksChange(Number(value))}>
+            <SelectTrigger className="w-[60px] h-6 text-sm ml-1 mr-1">
+              <SelectValue placeholder={targetTasks.toString()} />
+            </SelectTrigger>
+            <SelectContent>
+              {[5, 10, 15, 20, 25, 30].map((value) => (
+                <SelectItem key={value} value={value.toString()}>{value}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {t('targetTasks')}
         </p>
       </CardHeader>
       <CardContent>
@@ -97,6 +117,7 @@ export function TodoList() {
   const fullTitle = t('whatDoYouWantToGetDoneToday');
   const [shouldResetTitle, setShouldResetTitle] = useState(false);
   const [transitioning, setTransitioning] = useState<number | null>(null);
+  const [targetTasks, setTargetTasks] = useState(10);
 
   const isMobile = window.innerWidth < 768; // 簡單的移動設備檢測
 
@@ -276,7 +297,7 @@ export function TodoList() {
                   onChange={(e) => setNewTodo(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder={t('addTodoPlaceholder')}
-                  className="flex-grow h-14 ml-7 transition-all duration-200 border-2 hover:border-gray-600 dark:hover:border-gray-500 hover:border-2 focus:border-2 focus:border-primary rounded-lg"
+                  className="flex-grow text-md h-14 ml-7 transition-all duration-200 border-2 hover:border-gray-600 dark:hover:border-gray-500 hover:border-2 focus:border-2 focus:border-primary rounded-lg"
                 />
                 <Button onClick={addTodo} disabled={newTodo.trim() === ''} className="h-14 w-32 font-bold rounded-lg">{t('addTodo')}</Button>
               </div>
@@ -408,7 +429,13 @@ export function TodoList() {
             </CardContent>
           </Card>
           {completedTodos.length > 0 && (
-            <CompletedPanel completedTodos={completedTodos} onRestore={restoreTodo} isMobile={isMobile} />
+            <CompletedPanel 
+              completedTodos={completedTodos} 
+              onRestore={restoreTodo} 
+              isMobile={isMobile}
+              targetTasks={targetTasks}
+              onTargetTasksChange={setTargetTasks}
+            />
           )}
         </div>
       </DragDropContext>

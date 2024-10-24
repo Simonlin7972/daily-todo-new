@@ -31,7 +31,7 @@ export function LanguageToggle({ isMobile = false }: LanguageToggleProps) {
     <Button 
       variant="outline" 
       onClick={toggleLanguage} 
-      className={`flex items-center space-x-2 ${isMobile ? 'w-full justify-start' : 'w-auto h-10 px-3'}`}
+      className={`flex items-center space-x-2 ${isMobile ? 'w-full justify-center' : 'w-auto h-10 px-3'}`}
     >
       {buttonContent}
     </Button>
