@@ -7,6 +7,15 @@ import { GripVertical, Trash2, Edit2, Check, Plus, Undo2, CheckCircle2 } from 'l
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import './TodoList.css';
 import sampleData from '../sampleData.json';
 import { useTranslation } from 'react-i18next';
@@ -35,6 +44,17 @@ const CompletedPanel: React.FC<{
   const { t } = useTranslation();
   const progressValue = Math.min(completedTodos.length, targetTasks) * (100 / targetTasks);
   const isCompleted = completedTodos.length >= targetTasks;
+  const [recap, setRecap] = useState('');
+
+  useEffect(() => {
+    setRecap(completedTodos.map(todo => `- ${todo.text}`).join('\n'));
+  }, [completedTodos]);
+
+  const saveRecap = () => {
+    // 這裡添加儲存回顧的邏輯
+    console.log("Saving recap:", recap);
+    // 可以在這裡添加儲存到本地存儲或發送到服務器的邏輯
+  };
 
   return (
     <Card className="w-full lg:max-w-md shadow-sm rounded-xl">
@@ -100,6 +120,29 @@ const CompletedPanel: React.FC<{
             </ul>
           )}
         </Droppable>
+        <Dialog>
+          <DialogTrigger asChild>
+            <div className="flex justify-center ml-4">
+              <Button className="w-full mt-4">{t('todaysRecap')}</Button>
+            </div>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[480px] p-8">
+            <DialogHeader>
+              <DialogTitle className='mb-1 text-xl'>{t('todaysRecap')}</DialogTitle>
+              <DialogDescription>
+                {t('recapDescription')}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-0">
+              <Textarea
+                value={recap}
+                onChange={(e) => setRecap(e.target.value)}
+                className="h-[200px]"
+              />
+              <Button onClick={saveRecap}>{t('saveRecap')}</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );
