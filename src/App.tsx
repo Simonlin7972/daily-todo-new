@@ -9,7 +9,7 @@ import './App.css'
 import './i18n'
 import { useTranslation } from 'react-i18next'
 
-export const App: React.FC = () => {
+const App: React.FC = () => {
   const { t } = useTranslation();
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -54,6 +54,6 @@ export const App: React.FC = () => {
       </div>
     </ThemeProvider>
   )
-}
+};
 
-export default App
+export default App;
