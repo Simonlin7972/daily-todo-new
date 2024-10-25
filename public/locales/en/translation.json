@@ -29,5 +29,7 @@
   "dailyReview": "Daily review",
   "todoList": "Todo list",
   "recapSaved": "Completed today's recap",
-  "recapSavedDescription": "Successfully saved today's recap!"
+  "recapSavedDescription": "Successfully saved today's recap!",
+  "sampleDataAdded": "Sample data added",
+  "sampleDataAddedDescription": "Successfully added sample data!"
 }

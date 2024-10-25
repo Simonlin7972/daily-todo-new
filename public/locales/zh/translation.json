@@ -29,5 +29,13 @@
   "dailyReview": "每日回顧",
   "todoList": "待辦事項",
   "recapSaved": "已完成今日回顧",
-  "recapSavedDescription": "已成功儲存今日回顧！"
+  "recapSavedDescription": "已成功儲存今日回顧！",
+  "sampleDataAdded": "已新增範例資料",
+  "sampleDataAddedDescription": "已成功新增範例資料！",
+  "badMood": "糟糕",
+  "neutralMood": "普通",
+  "goodMood": "很棒",
+  "pleaseSelectMood": "請選擇心情",
+  "moodSelectionRequired": "保存回顧前請選擇您的心情",
+  "recapPlaceholder": "在這裡寫下你對今天的回顧..."
 }

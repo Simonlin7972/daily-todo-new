@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/select"
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { RecapDialog } from './RecapDialog';
 
 interface Todo {
   id: number;
@@ -42,20 +43,11 @@ const CompletedPanel: React.FC<{
   isMobile: boolean;
   targetTasks: number;
   onTargetTasksChange: (value: number) => void;
-  onSaveRecap: (recap: string) => void;
+  onSaveRecap: (recap: string, mood: string) => void;
 }> = ({ completedTodos, onRestore, isMobile, targetTasks, onTargetTasksChange, onSaveRecap }) => {
   const { t } = useTranslation();
   const progressValue = Math.min(completedTodos.length, targetTasks) * (100 / targetTasks);
   const isCompleted = completedTodos.length >= targetTasks;
-  const [recap, setRecap] = useState('');
-
-  useEffect(() => {
-    setRecap(completedTodos.map(todo => `- ${todo.text}`).join('\n'));
-  }, [completedTodos]);
-
-  const saveRecap = () => {
-    onSaveRecap(recap);
-  };
 
   return (
     <Card className="w-full lg:max-w-md shadow-sm rounded-xl">
@@ -122,48 +114,14 @@ const CompletedPanel: React.FC<{
           )}
         </Droppable>
         
-        {/* 今日recap 功能 */}
-        
-        <Dialog>
-          <DialogTrigger asChild>
-            <div className="flex justify-center ml-4">
-              <Button className="w-full mt-4 h-12 font-bold">{t('todaysRecap')}</Button>
-            </div>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[480px] p-8">
-            <DialogHeader>
-              <DialogTitle className='mb-1 text-xl'>{t('todaysRecap')}</DialogTitle>
-              <DialogDescription>
-                {t('recapDescription')}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-0">
-              <Textarea
-                value={recap}
-                onChange={(e) => setRecap(e.target.value)}
-                className="h-[200px]"
-              />
-              <Button 
-                onClick={() => {
-                  onSaveRecap(recap);
-                }} 
-                className="w-full h-12 font-bold" 
-                id="saveRecapBtn"
-              >
-                {t('saveRecap')}
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* 今日recap 功能結束 */}
+        <RecapDialog completedTodos={completedTodos} onSaveRecap={onSaveRecap} />
       </CardContent>
     </Card>
   );
 };
 
 export function TodoList() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [todos, setTodos] = useState<Todo[]>([]);
   const [completedTodos, setCompletedTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState('');
@@ -203,8 +161,28 @@ export function TodoList() {
     const resetBtn = document.getElementById('resetBtn');
 
     const addSampleData = () => {
-      setTodos(prevTodos => [...prevTodos, ...sampleData.todos as Todo[]]);
-      setCompletedTodos(prevCompleted => [...prevCompleted, ...sampleData.completedTodos as Todo[]]);
+      const currentLanguage = i18n.language.startsWith('zh') ? 'zh' : 'en';
+      const newTodos = sampleData[currentLanguage].todos.map(todo => ({
+        ...todo,
+        id: Date.now() + Math.random()
+      }));
+      const newCompletedTodos = sampleData[currentLanguage].completedTodos.map(todo => ({
+        ...todo,
+        id: Date.now() + Math.random()
+      }));
+
+      setTodos(prevTodos => [...prevTodos, ...newTodos]);
+      setCompletedTodos(prevCompleted => [...prevCompleted, ...newCompletedTodos]);
+
+      toast.success(t('sampleDataAdded'), {
+        description: t('sampleDataAddedDescription'),
+        duration: 2000,
+        style: {
+          textAlign: 'left',
+          justifyContent: 'flex-start',
+          fontWeight: 'bold',
+        },
+      });
     };
 
     const resetApp = () => {
@@ -224,7 +202,7 @@ export function TodoList() {
       addDataBtn?.removeEventListener('click', addSampleData);
       resetBtn?.removeEventListener('click', resetApp);
     };
-  }, []);
+  }, [i18n.language, t]);
 
   const addTodo = () => {
     if (newTodo.trim() !== '') {
@@ -337,27 +315,15 @@ export function TodoList() {
     }
   };
 
-  const handleSaveRecap = (recap: string) => {
+  const handleSaveRecap = (recap: string, mood: string) => {
     // 清除已完成的任務
     setCompletedTodos([]);
     
     // 將所有未完成的任務標記為已完成
     setTodos(todos.map(todo => ({ ...todo, completed: true })));
     
-    // 使用 localStorage 來存儲 recap
-    localStorage.setItem('dailyRecap', recap);
-    
-    // 顯示 Sonner 通知
-    toast.success(t('recapSaved'), {
-      description: t('recapSavedDescription'),
-      duration: 2000,
-      icon: <CheckCircle2 size={18} />,
-      style: {
-        textAlign: 'left',
-        justifyContent: 'flex-start',
-        fontWeight: 'bold',
-      },
-    });
+    // 使用 localStorage 來存儲 recap 和 mood
+    localStorage.setItem('dailyRecap', JSON.stringify({ text: recap, mood }));
   };
 
   return (
