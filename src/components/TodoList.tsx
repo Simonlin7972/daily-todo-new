@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useNavigate } from 'react-router-dom';
 
 interface Todo {
   id: number;
@@ -40,7 +41,8 @@ const CompletedPanel: React.FC<{
   isMobile: boolean;
   targetTasks: number;
   onTargetTasksChange: (value: number) => void;
-}> = ({ completedTodos, onRestore, isMobile, targetTasks, onTargetTasksChange }) => {
+  onSaveRecap: (recap: string) => void;
+}> = ({ completedTodos, onRestore, isMobile, targetTasks, onTargetTasksChange, onSaveRecap }) => {
   const { t } = useTranslation();
   const progressValue = Math.min(completedTodos.length, targetTasks) * (100 / targetTasks);
   const isCompleted = completedTodos.length >= targetTasks;
@@ -51,9 +53,7 @@ const CompletedPanel: React.FC<{
   }, [completedTodos]);
 
   const saveRecap = () => {
-    // 這裡添加儲存回顧的邏輯
-    console.log("Saving recap:", recap);
-    // 可以在這裡添加儲存到本地存儲或發送到服務器的邏輯
+    onSaveRecap(recap);
   };
 
   return (
@@ -142,7 +142,13 @@ const CompletedPanel: React.FC<{
                 onChange={(e) => setRecap(e.target.value)}
                 className="h-[200px]"
               />
-              <Button onClick={saveRecap} className="w-full h-12 font-bold">{t('saveRecap')}</Button>
+              <Button 
+                onClick={saveRecap} 
+                className="w-full h-12 font-bold" 
+                id="saveRecapBtn"
+              >
+                {t('saveRecap')}
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -166,6 +172,7 @@ export function TodoList() {
   const [shouldResetTitle, setShouldResetTitle] = useState(false);
   const [transitioning, setTransitioning] = useState<number | null>(null);
   const [targetTasks, setTargetTasks] = useState(10);
+  const navigate = useNavigate();
 
   const isMobile = window.innerWidth < 768; // 簡單的移動設備檢測
 
@@ -327,6 +334,11 @@ export function TodoList() {
     }
   };
 
+  const handleSaveRecap = (recap: string) => {
+    // 使用 encodeURIComponent 來確保 URL 安全
+    navigate(`/daily-review?recap=${encodeURIComponent(recap)}`);
+  };
+
   return (
     <TooltipProvider>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -483,6 +495,7 @@ export function TodoList() {
               isMobile={isMobile}
               targetTasks={targetTasks}
               onTargetTasksChange={setTargetTasks}
+              onSaveRecap={handleSaveRecap}
             />
           )}
         </div>
