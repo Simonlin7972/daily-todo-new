@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const DailyReview: React.FC = () => {
   const { t } = useTranslation();
-  const location = useLocation();
   const [recap, setRecap] = useState('');
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const recapParam = searchParams.get('recap');
-    if (recapParam) {
-      setRecap(decodeURIComponent(recapParam));
+    // 從 localStorage 獲取 recap
+    const savedRecap = localStorage.getItem('dailyRecap');
+    if (savedRecap) {
+      setRecap(savedRecap);
+      // 可選：清除 localStorage 中的 recap
+      // localStorage.removeItem('dailyRecap');
     }
-  }, [location]);
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-8">

@@ -27,5 +27,7 @@
   "recapDescription": "Here's a summary of your completed tasks. Feel free to edit and reflect on your achievements.",
   "saveRecap": "Save recap",
   "dailyReview": "Daily review",
-  "todoList": "Todo list"
+  "todoList": "Todo list",
+  "recapSaved": "Completed today's recap",
+  "recapSavedDescription": "Successfully saved today's recap!"
 }

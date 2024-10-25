@@ -16,7 +16,13 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ currentTime }) => {
   const navigate = useNavigate();
 
   const handleTabChange = (value: string) => {
-    navigate(value);
+    if (value === '/') {
+      // 如果切換到 TodoList 頁面，只進行導航，不重置狀態
+      navigate(value);
+    } else {
+      // 對於其他頁面（如 Daily Review），正常導航
+      navigate(value);
+    }
   };
 
   return (
@@ -30,10 +36,10 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({ currentTime }) => {
         {/* Navigation Tabs */}
         <Tabs value={location.pathname} onValueChange={handleTabChange} className="mr-auto">
           <TabsList>
-            <TabsTrigger value="/">
+            <TabsTrigger value="/" id="todoListTab">
               {t('todoList')}
             </TabsTrigger>
-            <TabsTrigger value="/daily-review">
+            <TabsTrigger value="/daily-review" id="dailyReviewTab">
               {t('dailyReview')}
             </TabsTrigger>
           </TabsList>

@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface Todo {
   id: number;
@@ -143,7 +144,9 @@ const CompletedPanel: React.FC<{
                 className="h-[200px]"
               />
               <Button 
-                onClick={saveRecap} 
+                onClick={() => {
+                  onSaveRecap(recap);
+                }} 
                 className="w-full h-12 font-bold" 
                 id="saveRecapBtn"
               >
@@ -335,8 +338,26 @@ export function TodoList() {
   };
 
   const handleSaveRecap = (recap: string) => {
-    // 使用 encodeURIComponent 來確保 URL 安全
-    navigate(`/daily-review?recap=${encodeURIComponent(recap)}`);
+    // 清除已完成的任務
+    setCompletedTodos([]);
+    
+    // 將所有未完成的任務標記為已完成
+    setTodos(todos.map(todo => ({ ...todo, completed: true })));
+    
+    // 使用 localStorage 來存儲 recap
+    localStorage.setItem('dailyRecap', recap);
+    
+    // 顯示 Sonner 通知
+    toast.success(t('recapSaved'), {
+      description: t('recapSavedDescription'),
+      duration: 2000,
+      icon: <CheckCircle2 size={18} />,
+      style: {
+        textAlign: 'left',
+        justifyContent: 'flex-start',
+        fontWeight: 'bold',
+      },
+    });
   };
 
   return (

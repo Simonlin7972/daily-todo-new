@@ -7,6 +7,7 @@ import { BottomBar } from "@/components/BottomBar"
 import { DailyReview } from './components/DailyReview'
 import './App.css'
 import './i18n'
+import { Toaster } from 'sonner'
 
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -38,6 +39,7 @@ function App() {
             </Routes>
           </main>
           <BottomBar />
+          <Toaster />
         </div>
       </ThemeProvider>
     </Router>
