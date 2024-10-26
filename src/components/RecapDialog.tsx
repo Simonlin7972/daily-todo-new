@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { toast } from 'sonner';
 import { CheckCircle2, Frown, Meh, Smile } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
 
 interface RecapDialogProps {
   completedTodos: { text: string }[];
@@ -60,6 +61,9 @@ export const RecapDialog: React.FC<RecapDialogProps> = ({ completedTodos, onSave
 
   const isSaveDisabled = !recap.trim() || !mood;
 
+  // 獲取今天的日期
+  const today = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -69,7 +73,10 @@ export const RecapDialog: React.FC<RecapDialogProps> = ({ completedTodos, onSave
       </DialogTrigger>
       <DialogContent className="sm:max-w-[480px] p-8">
         <DialogHeader>
-          <DialogTitle className='mb-1 text-xl'>{t('todaysRecap')}</DialogTitle>
+          <div className="flex items-center mb-2">
+            <DialogTitle className='text-xl mr-2'>{t('todaysRecap')}</DialogTitle>
+            <Badge variant="secondary">{today}</Badge>
+          </div>
           <DialogDescription>
             {t('recapDescription')}
           </DialogDescription>

@@ -23,7 +23,7 @@
   "startTimer": "開始計時",
   "pauseTimer": "暫停計時",
   "resetTimer": "重新計時",
-    "todaysRecap": "今日回顧",
+  "todaysRecap": "今日回顧",
   "recapDescription": "這是你今天完成的任務摘要，你可以自由編輯並反思今天的成就，儲存之後今天完成的任務將被清除。",
   "saveRecap": "儲存回顧",
   "dailyReview": "每日回顧",
@@ -37,5 +37,7 @@
   "goodMood": "很棒",
   "pleaseSelectMood": "請選擇心情",
   "moodSelectionRequired": "保存回顧前請選擇您的心情",
-  "recapPlaceholder": "在這裡寫下你對今天的回顧..."
+  "recapPlaceholder": "在這裡寫下你對今天的回顧...",
+  "recapUpdated": "回顧已更新",
+  "recapUpdatedDescription": "您的回顧內容已成功更新"
 }

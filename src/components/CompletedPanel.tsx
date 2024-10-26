@@ -3,11 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Droppable, Draggable } from '@hello-pangea/dnd';
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Check, Undo2 } from 'lucide-react';
+import { Droppable } from '@hello-pangea/dnd';
 import { RecapDialog } from './RecapDialog';
+import { CompletedItem } from './CompletedItem';
+import { Badge } from "@/components/ui/badge";
 
 interface Todo {
   id: number;
@@ -37,10 +36,16 @@ export const CompletedPanel: React.FC<CompletedPanelProps> = ({
   const progressValue = Math.min(completedTodos.length, targetTasks) * (100 / targetTasks);
   const isCompleted = completedTodos.length >= targetTasks;
 
+  // 獲取今天的日期
+  const today = new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
   return (
-    <Card className="w-full lg:max-w-md shadow-sm rounded-xl">
+    <Card className="w-full lg:max-w-md shadow-sm rounded-x">
       <CardHeader>
-        <CardTitle className="mb-4">{t('whatIveDoneToday')}</CardTitle>
+        <div className="flex items-center mb-4">
+          <CardTitle className="mr-4">{t('whatIveDoneToday')}</CardTitle>
+          <Badge variant="secondary">{today}</Badge>
+        </div>
         <Progress 
           value={progressValue} 
           className={`w-full h-2 mt-2 ${isCompleted ? 'bg-primary' : ''}`} 
@@ -65,37 +70,13 @@ export const CompletedPanel: React.FC<CompletedPanelProps> = ({
           {(provided) => (
             <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2 pl-4">
               {completedTodos.map((todo, index) => (
-                <Draggable key={todo.id} draggableId={todo.id.toString()} index={index}>
-                  {(provided) => (
-                    <li
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className="flex items-center justify-between p-2 pl-4 rounded-lg border bg-card text-card-foreground shadow-sm hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-200"
-                    >
-                      <div className="flex items-center">
-                        <Check size={20} className="text-gray-300 mr-2" />
-                        <span className="text-sm line-through truncate">{todo.text}</span>
-                      </div>
-                      {isMobile ? (
-                        <Button variant="ghost" size="icon" onClick={() => onRestore(todo.id)}>
-                          <Undo2 size={16} />
-                        </Button>
-                      ) : (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" onClick={() => onRestore(todo.id)}>
-                              <Undo2 size={16} />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{t('restore')}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      )}
-                    </li>
-                  )}
-                </Draggable>
+                <CompletedItem
+                  key={todo.id}
+                  todo={todo}
+                  index={index}
+                  onRestore={onRestore}
+                  isMobile={isMobile}
+                />
               ))}
               {provided.placeholder}
             </ul>

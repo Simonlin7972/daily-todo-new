@@ -66,7 +66,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
                     onCheckedChange={() => toggleTodo(todo.id)}
                     className="mr-3 ml-3"
                   />
-                )}
+                )} 
                 {editingId === todo.id ? (
                   <Input
                     value={editText}

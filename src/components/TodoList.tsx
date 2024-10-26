@@ -31,6 +31,7 @@ import { toast } from 'sonner';
 import { RecapDialog } from './RecapDialog';
 import { TodoItem } from './TodoItem';
 import { CompletedPanel } from './CompletedPanel';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 interface Todo {
   id: number;
@@ -41,7 +42,6 @@ interface Todo {
 
 export function TodoList() {
   const { t, i18n } = useTranslation();
-  const [todos, setTodos] = useState<Todo[]>([]);
   const [completedTodos, setCompletedTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState('');
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -53,6 +53,7 @@ export function TodoList() {
   const [transitioning, setTransitioning] = useState<number | null>(null);
   const [targetTasks, setTargetTasks] = useState(10);
   const navigate = useNavigate();
+  const [todos, setTodos] = useLocalStorage<Todo[]>('todos', []);
 
   const isMobile = window.innerWidth < 768; // 簡單的移動設備檢測
 
