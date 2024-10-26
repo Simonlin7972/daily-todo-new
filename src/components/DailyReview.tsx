@@ -34,8 +34,6 @@ export const DailyReview: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">{t('dailyReview')}</h1>
-      
       {recap && (
         <Card className="w-full max-w-2xl mx-auto">
           <CardHeader>

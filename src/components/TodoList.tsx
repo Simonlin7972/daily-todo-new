@@ -29,6 +29,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { RecapDialog } from './RecapDialog';
+import { TodoItem } from './TodoItem';
+import { CompletedPanel } from './CompletedPanel';
 
 interface Todo {
   id: number;
@@ -36,89 +38,6 @@ interface Todo {
   completed: boolean;
   type: 'todo' | 'section';
 }
-
-const CompletedPanel: React.FC<{
-  completedTodos: Todo[];
-  onRestore: (id: number) => void;
-  isMobile: boolean;
-  targetTasks: number;
-  onTargetTasksChange: (value: number) => void;
-  onSaveRecap: (recap: string, mood: string) => void;
-}> = ({ completedTodos, onRestore, isMobile, targetTasks, onTargetTasksChange, onSaveRecap }) => {
-  const { t } = useTranslation();
-  const progressValue = Math.min(completedTodos.length, targetTasks) * (100 / targetTasks);
-  const isCompleted = completedTodos.length >= targetTasks;
-
-  return (
-    <Card className="w-full lg:max-w-md shadow-sm rounded-xl">
-      <CardHeader>
-        <CardTitle className="mb-4">{t('whatIveDoneToday')}</CardTitle>
-        <Progress 
-          value={progressValue} 
-          className={`w-full h-2 mt-2 ${isCompleted ? 'bg-primary' : ''}`} 
-        />
-        <p className="text-sm text-muted-foreground pt-2 flex items-center justify-center">
-          {t('tasksCompleted', { count: completedTodos.length })} / 
-          <Select onValueChange={(value) => onTargetTasksChange(Number(value))}>
-            <SelectTrigger className="w-[60px] h-6 text-sm ml-1 mr-1">
-              <SelectValue placeholder={targetTasks.toString()} />
-            </SelectTrigger>
-            <SelectContent>
-              {[5, 10, 15, 20, 25, 30].map((value) => (
-                <SelectItem key={value} value={value.toString()}>{value}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {t('targetTasks')}
-        </p>
-      </CardHeader>
-      <CardContent>
-        <Droppable droppableId="completed">
-          {(provided) => (
-            <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2 pl-4">
-              {completedTodos.map((todo, index) => (
-                <Draggable key={todo.id} draggableId={todo.id.toString()} index={index}>
-                  {(provided) => (
-                    <li
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className="flex items-center justify-between p-2 pl-4 rounded-lg border bg-card text-card-foreground shadow-sm hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-200"
-                    >
-                      <div className="flex items-center">
-                        <Check size={20} className="text-gray-300 mr-2" />
-                        <span className="text-sm line-through truncate">{todo.text}</span>
-                      </div>
-                      {isMobile ? (
-                        <Button variant="ghost" size="icon" onClick={() => onRestore(todo.id)}>
-                          <Undo2 size={16} />
-                        </Button>
-                      ) : (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" onClick={() => onRestore(todo.id)}>
-                              <Undo2 size={16} />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{t('restore')}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      )}
-                    </li>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </ul>
-          )}
-        </Droppable>
-        
-        <RecapDialog completedTodos={completedTodos} onSaveRecap={onSaveRecap} />
-      </CardContent>
-    </Card>
-  );
-};
 
 export function TodoList() {
   const { t, i18n } = useTranslation();
@@ -176,7 +95,7 @@ export function TodoList() {
 
       toast.success(t('sampleDataAdded'), {
         description: t('sampleDataAddedDescription'),
-        duration: 2000,
+        duration: 1000,
         style: {
           textAlign: 'left',
           justifyContent: 'flex-start',
@@ -329,162 +248,74 @@ export function TodoList() {
   return (
     <TooltipProvider>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex flex-col lg:flex-row justify-center lg:space-x-4 w-full max-w-5xl mx-auto px-4 lg:px-0">
-          <Card className="w-full lg:max-w-xl mb-4 lg:mb-0 shadow-sm rounded-xl">
-            <CardHeader>
-              <CardTitle className="typewriter-title">
-                {titleText}<span className="caret"></span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex space-x-4 mb-4">
-                <Input
-                  type="text"
-                  value={newTodo}
-                  onChange={(e) => setNewTodo(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder={t('addTodoPlaceholder')}
-                  className="flex-grow text-md h-14 ml-7 transition-all duration-200 border-2 hover:border-gray-600 dark:hover:border-gray-500 hover:border-2 focus:border-2 focus:border-primary rounded-lg"
-                />
-                <Button onClick={addTodo} disabled={newTodo.trim() === ''} className="h-14 w-32 font-bold rounded-lg">{t('addTodo')}</Button>
-              </div>
-              <Droppable droppableId="todos">
-                {(provided, snapshot) => (
-                  <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
-                    {todos.map((todo, index) => (
-                      <Draggable key={todo.id} draggableId={todo.id.toString()} index={index}>
-                        {(provided, snapshot) => (
-                          <React.Fragment>
-                            <li
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              className={`flex items-center group ${snapshot.isDragging ? 'opacity-70' : ''} ${transitioning === todo.id ? 'opacity-70 transition-all duration-300' : ''}`}
-                            >
-                              <span 
-                                {...provided.dragHandleProps} 
-                                className={`mr-2 cursor-move text-gray-300 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200 ${isMobile ? '' : 'opacity-0 group-hover:opacity-100'}`}
-                              >
-                                <GripVertical size={20} />
-                              </span>
-                              <div className={`flex items-center justify-between p-2 rounded-lg border bg-card text-card-foreground shadow-sm flex-grow ${todo.type === 'section' ? 'bg-secondary border-secondary h-12' : ''} ${snapshot.isDragging ? 'rotate-1' : ''} hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-200`}>
-                                <div className="flex items-center flex-grow">
-                                  {todo.type === 'todo' && (
-                                    <Checkbox
-                                      checked={todo.completed}
-                                      onCheckedChange={() => toggleTodo(todo.id)}
-                                      className="mr-3 ml-3"
-                                    />
-                                  )}
-                                  {editingId === todo.id ? (
-                                    <Input
-                                      value={editText}
-                                      onChange={(e) => setEditText(e.target.value)}
-                                      onKeyDown={(e) => handleEditKeyDown(e, todo.id)}
-                                      onBlur={() => saveEdit(todo.id)}
-                                      autoFocus
-                                      className="flex-grow mr-2 h-8"
-                                    />
-                                  ) : (
-                                    <span 
-                                      className={`${todo.completed ? 'line-through text-muted-foreground' : ''} text-sm flex-grow text-left ${todo.type === 'section' ? 'font-bold text-sm pl-2' : ''} cursor-pointer`}
-                                      onClick={(e) => startEditing(todo.id, todo.text, e)}
-                                    >
-                                      {todo.text}
-                                    </span>
-                                  )}
-                                </div>
-                                <div className={`flex space-x-1 ml-2 ${editingId === todo.id ? '' : 'opacity-0 group-hover:opacity-100'} transition-opacity duration-200`}>
-                                  {editingId === todo.id ? (
-                                    isMobile ? (
-                                      <Button variant="ghost" size="icon" onClick={() => saveEdit(todo.id)}>
-                                        <Check size={16} />
-                                      </Button>
-                                    ) : (
-                                      <Tooltip>
-                                        <TooltipTrigger asChild>
-                                          <Button variant="ghost" size="icon" onClick={() => saveEdit(todo.id)}>
-                                            <Check size={16} />
-                                          </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                          <p>{t('save')}</p>
-                                        </TooltipContent>
-                                      </Tooltip>
-                                    )
-                                  ) : (
-                                    <>
-                                      {isMobile ? (
-                                        <>
-                                          <Button variant="ghost" size="icon" onClick={(e) => startEditing(todo.id, todo.text, e)}>
-                                            <Edit2 size={16} />
-                                          </Button>
-                                          <Button variant="ghost" size="icon" onClick={() => deleteTodo(todo.id)}>
-                                            <Trash2 size={16} />
-                                          </Button>
-                                        </>
-                                      ) : (
-                                        <>
-                                          <Tooltip>
-                                            <TooltipTrigger asChild>
-                                              <Button variant="ghost" size="icon" onClick={(e) => startEditing(todo.id, todo.text, e)}>
-                                                <Edit2 size={16} />
-                                              </Button>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                              <p>{t('edit')}</p>
-                                            </TooltipContent>
-                                          </Tooltip>
-                                          <Tooltip>
-                                            <TooltipTrigger asChild>
-                                              <Button variant="ghost" size="icon" onClick={() => deleteTodo(todo.id)}>
-                                                <Trash2 size={16} />
-                                              </Button>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                              <p>{t('delete')}</p>
-                                            </TooltipContent>
-                                          </Tooltip>
-                                        </>
-                                      )}
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                            </li>
-                            {snapshot.isDragging && (
-                              <li className="h-[52px] ml-8 bg-gray-100 dark:bg-gray-800 rounded-md my-2 transition-all duration-200"></li>
-                            )}
-                          </React.Fragment>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </ul>
-                )}
-              </Droppable>
-              {todos.length > 0 && (
-                <div className="ml-7">
-                  <Button 
-                    variant="ghost" 
-                    className="w-full mt-2 text-muted-foreground hover:text-foreground transition-colors"
-                    onClick={addSection}
-                  >
-                    + {t('addSection')}
-                  </Button>
+        <div className="flex flex-col justify-center h-full py-4">
+          <div className="flex flex-col lg:flex-row justify-center lg:space-x-4 w-full max-w-5xl mx-auto px-4 lg:px-0">
+            <Card className="w-full lg:max-w-xl mb-4 lg:mb-0 shadow-sm rounded-xl">
+              <CardHeader>
+                <CardTitle className="typewriter-title">
+                  {titleText}<span className="caret"></span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex space-x-4 mb-4">
+                  <Input
+                    type="text"
+                    value={newTodo}
+                    onChange={(e) => setNewTodo(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder={t('addTodoPlaceholder')}
+                    className="flex-grow text-md h-14 ml-7 transition-all duration-200 border-2 hover:border-gray-600 dark:hover:border-gray-500 hover:border-2 focus:border-2 focus:border-primary rounded-lg"
+                  />
+                  <Button onClick={addTodo} disabled={newTodo.trim() === ''} className="h-14 w-32 font-bold rounded-lg">{t('addTodo')}</Button>
                 </div>
-              )}
-            </CardContent>
-          </Card>
-          {completedTodos.length > 0 && (
-            <CompletedPanel 
-              completedTodos={completedTodos} 
-              onRestore={restoreTodo} 
-              isMobile={isMobile}
-              targetTasks={targetTasks}
-              onTargetTasksChange={setTargetTasks}
-              onSaveRecap={handleSaveRecap}
-            />
-          )}
+                <Droppable droppableId="todos">
+                  {(provided, snapshot) => (
+                    <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
+                      {todos.map((todo, index) => (
+                        <TodoItem
+                          key={todo.id}
+                          todo={todo}
+                          index={index}
+                          editingId={editingId}
+                          editText={editText}
+                          isMobile={isMobile}
+                          transitioning={transitioning}
+                          toggleTodo={toggleTodo}
+                          startEditing={startEditing}
+                          setEditText={setEditText}
+                          handleEditKeyDown={handleEditKeyDown}
+                          saveEdit={saveEdit}
+                          deleteTodo={deleteTodo}
+                        />
+                      ))}
+                      {provided.placeholder}
+                    </ul>
+                  )}
+                </Droppable>
+                {todos.length > 0 && (
+                  <div className="ml-7">
+                    <Button 
+                      variant="ghost" 
+                      className="w-full mt-2 text-muted-foreground hover:text-foreground transition-colors"
+                      onClick={addSection}
+                    >
+                      + {t('addSection')}
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+            {completedTodos.length > 0 && (
+              <CompletedPanel 
+                completedTodos={completedTodos} 
+                onRestore={restoreTodo} 
+                isMobile={isMobile}
+                targetTasks={targetTasks}
+                onTargetTasksChange={setTargetTasks}
+                onSaveRecap={handleSaveRecap}
+              />
+            )}
+          </div>
         </div>
       </DragDropContext>
     </TooltipProvider>

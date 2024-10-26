@@ -32,7 +32,7 @@ export const RecapDialog: React.FC<RecapDialogProps> = ({ completedTodos, onSave
       onSaveRecap(recap, mood);
       toast.success(t('recapSaved'), {
         description: t('recapSavedDescription'),
-        duration: 2000,
+        duration: 1000,
         style: {
           textAlign: 'left',
           justifyContent: 'flex-start',
@@ -42,7 +42,7 @@ export const RecapDialog: React.FC<RecapDialogProps> = ({ completedTodos, onSave
     } else {
       toast.error(t('pleaseSelectMood'), {
         description: t('moodSelectionRequired'),
-        duration: 2000,
+        duration: 1000,
       });
     }
   };

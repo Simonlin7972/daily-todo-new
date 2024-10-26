@@ -31,5 +31,9 @@
   "recapSaved": "Completed today's recap",
   "recapSavedDescription": "Successfully saved today's recap!",
   "sampleDataAdded": "Sample data added",
-  "sampleDataAddedDescription": "Successfully added sample data!"
+  "sampleDataAddedDescription": "Successfully added sample data!",
+  "badMood": "Bad",
+  "neutralMood": "Neutral",
+  "goodMood": "Good",
+  "recapPlaceholder": "Enter your recap here..."
 }
